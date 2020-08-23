@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Dashboard</title>
+        <script src="dashboard.js"></script>
+        <link rel="stylesheet" href="style/style.css">
+    </head>
+    <body class='body-wrapper'>
+        <!--Should include a script that makes the user choose his or her own preferenes and store them in browser local storage-->
+        <div class='settings'>
+            <ul>
+                <li><a href="settings.html">(zahnrad svg)</a></li>
+            </ul>
+        </div>
+        <div class='searchbar-wrapper'>
+            <input type="search" maxlength="256" placeholder='Search with Google' id='searchbar'>
+        </div>
+        <
+        <div class='topics' id='topic-grid'>
+            <div class="section_theme" id="programming_questions">
+                <h3>Programming Questions</h3>
+                <ul>
+                    <li><a href="https://stackoverflow.com/questions">Stackoverflow</a></li>
+                    <li><a href="https://www.w3schools.com/">W3 Schools</a></li>
+                </ul>
+            </div>
+            <div class="section_theme" id="code_challenges">
+                <h3>Code Challanges</h3>
+                <ul>
+                    <li><a href="https://coderbyte.com/">CoderByte</a></li>
+                    <li><a href="https://www.hackerrank.com/dashboard">HackerRank</a></li>
+                    <li><a href="https://www.codewars.com/">CodeWars</a></li>
+                    <li><a href="https://leetcode.com/explore/">LeetCode</a></li>
+                    <li><a href="https://www.codechef.com/">CodeChef</a></li>
+                </ul>
+            </div>
+            <div class="section_theme" id="self_education">
+                <h3>Self-Education</h3>
+                <ul>
+                    <li><a href="https://www.keybr.com/">Touch typing</a></li>
+                    <li><a href="https://10fastfingers.com/typing-test/german">10FastFingers</a></li>
+                    <li><a href="https://courses.edx.org/dashboard">edx</a></li>
+                    <li><a href="https://cs50.harvard.edu/web/2020/">CS50 Web</a></li>
+                    <li><a href="https://cs50.harvard.edu/ai/2020/">CS50 AI</a></li>
+                    <li><a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world">Flask Mega Tutorial</a></li>
+                </ul>
+            </div>
+            <div class="section_theme" id="design">
+                <h3>Design</h3>
+                <ul>
+                    <li><a href="https://www.figma.com">Figma</a></li>
+                    <li><a href="https://fontawesome.com/icons?d=gallery&m=free">FontAwsome</a></li>
+                    <li><a href="https://fonts.google.com/">Google Fonts</a></li>
+                </ul>
+            </div>
+            <div class="section_theme" id="news">
+                <h3>News</h3>
+                <ul>
+                    <li><a href="https://www.tagesschau.de/">Tagesschau</a></li>
+                    <li><a href="https://news.ycombinator.com/">Hacker News</a></li>
+                </ul>
+            </div>
+            <div class="section_theme" id="others">
+                <h3>Util</h3>
+                <ul>
+                    <li><a href="https://github.com/">GitHub</a></li>
+                    <li><a href="https://hub.docker.com/?ref=login">Docker Hub</a></li>
+                    <li><a href="https://drive.google.com/drive/my-drive">Google Drive</a></li>
+                </ul>
+            </div>    
+        </div>
+
+        <footer>
+            <span>
+                Made with ❤ by <a href="https://github.com/Liamvdv">Liamvdv</a>. <br>
+                See also <a href="shortcuts.html">shortcuts page.</a> <br>
+            </span>
+            <button onclick=coming_soon()>Leave some love.</button>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,49 @@
+:root {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: Arial, sans-serif;
+
+}
+
+body {
+    background-color: #2a2a2e;
+}
+
+.search-wrapper {
+    text-align: center;
+    padding: 5rem;
+}
+
+.searchbar {
+    width: 50%;
+    border-radius: 0.2rem;
+    padding: 1rem;
+}
+
+.topics-wrapper {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.topic-container {
+    display: flex;
+    flex-direction: column;
+    width: 25ch;
+    background-color: #9c9c9e;
+    border-radius: .5rem;
+    border: 1px solid grey;
+}
+
+.topic-name {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.topic-links-holder {
+    list-style: none;
+}
+
+.topic-link:hover {
+    color: black;
+}
