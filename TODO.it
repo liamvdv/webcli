@@ -1,3 +1,5 @@
-1) how to add small icons to websites
-2) add js support for search bar (that is autofocused)
-3) enable backgroundpicture load from local machine (path is saved in local storage)
+1) make html body a css grid.
+2) make a big box where the other css grid (link-container) fits in
+3) give all the area attributes
+4) Give the settings form a area that overlays the rest
+5) blur the rest.

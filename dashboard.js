@@ -61,6 +61,40 @@ function add_link(topic_name, name, URL) {
 function remove_link(name, URL) {
     ;
 }
+function apply_custom_styling() {
+    const preferences = JSON.parse(localStorage.getItem("preferences"));
+    console.log(preferences.styling);
+    preferences.styling.forEach(css_class => {
+        //hier ist etwas falsch
+        console.log(css_class.name)
+        let elements = document.querySelectorAll(css_class.name);
+        console.log(elements);
+        elements.forEach(element => {
+            for (const [property, value] of Object.entries(styling.properties)) {
+                console.log(property + ": " + value);
+                element.style[property] = value;
+            }
+        })
+    });
+}
+function change_property_of_class(class_name, property, value) {
+
+    let styling = JSON.parse(localStorage.getItem("preferences")).styling;
+    styling.forEach(css_class => {
+        if (!css_class.name) {
+            styling.push({"name": class_name, "properties": {property: value}});
+        } else {
+            css_class.properties[property] = [value];
+        }
+    }); 
+}
+
+function apply_property(hex_value, dom_element_class) {
+    let dom_elements = document.querySelectorAll('.' + dom_element_class);
+    dom_elements.forEach(element => {
+        element.style.backgroundColor = hex_value;
+    })
+}
 
 const default_preferences = {
     "topics": [
@@ -80,7 +114,7 @@ const default_preferences = {
                     ]
                 },
                 {
-                    "name": "Code Challanges",
+                    "name": "Code Challenges",
                     "links": [
                         ["CoderByte", "https://coderbyte.com/"],
                         ["HackerRank", "https://www.hackerrank.com/dashboard"],
@@ -112,17 +146,25 @@ const default_preferences = {
                         ["DockerHub", "https://hub.docker.com/?ref=login"]
                     ]
                 }
-            ]
+    ],
+    "styling": [
+        {
+            "class": "topic-container",
+            "properties": {
+                "backgroundColor": "#ffffff",
+                "border": "1px solid green"
+            }
+        },
+        {
+            "class": "topic-wrapper",
+            "properties": {
+                "backgroundColor": "#030303"
+            }
+        }
+    ]
 };
 
-function runClickEvent(element) {
-    var evt = new window.MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-    });
-    element.dispatchEvent(evt);
-}
+
 
 // Main Program
 document.addEventListener('DOMContentLoaded', () => {
@@ -134,9 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
     build_topics_section(preferences, topic_wrapper);
 
     document.querySelector('form').onsubmit = function() {
+        let googleSearchURL;
         let searchterm = document.querySelector('#searchbar').value;
-        let googleSearchURL = "https://www.google.com/search?q=" + searchterm.replace(/ +/g, "+");
-
+        if (searchterm.includes("http://", 0) || searchterm.includes("https://", 0)) {
+            googleSearchURL = searchterm;
+        } else {
+            googleSearchURL = "https://www.google.com/search?q=" + searchterm.replace(/ +/g, "+");
+        }
         // create element to run hyperlink click simulation on
         let a = document.createElement('a');
         a.href = googleSearchURL;
