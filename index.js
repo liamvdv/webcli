@@ -25,7 +25,7 @@ const DEFAULT_PREFERENCES = {
     grid_links: {
         common_websites: [
             ["DockerHub", "https://hub.docker.com/?ref=login", "https://miro.medium.com/max/3172/1*y6CvfE6WUgoIdT8Mp0Ev_g.png"],
-            ["GitHub", "www.github.com", ""],
+            ["GitHub", "https://www.github.com", ""],
             ["Google Drive", "https://drive.google.com/drive/my-drive", ""]
         ],
         office: [
