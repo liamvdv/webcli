@@ -24,7 +24,7 @@ const DEFAULT_PREFERENCES = {
     search_section: DEFAULT_SEARCH_SECTION,
     grid_links: {
         common_websites: [
-            ["DockerHub", "hub.docker.com", "https://miro.medium.com/max/3172/1*y6CvfE6WUgoIdT8Mp0Ev_g.png"],
+            ["DockerHub", "https://hub.docker.com/?ref=login", "https://miro.medium.com/max/3172/1*y6CvfE6WUgoIdT8Mp0Ev_g.png"],
             ["GitHub", "www.github.com", ""],
             ["Google Drive", "https://drive.google.com/drive/my-drive", ""]
         ],
@@ -216,6 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
             form.remove();
             event.preventDefault();
         });
+        // Implement way to abort form.
     });
 
     const searchbar = get(".search-input");
