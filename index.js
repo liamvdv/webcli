@@ -26,12 +26,11 @@ const DEFAULT_PREFERENCES = {
         common_websites: [
             ["DockerHub", "https://hub.docker.com/?ref=login", "https://miro.medium.com/max/3172/1*y6CvfE6WUgoIdT8Mp0Ev_g.png"],
             ["GitHub", "https://www.github.com", ""],
-            ["Google Drive", "https://drive.google.com/drive/my-drive", ""]
-        ],
-        office: [
+            ["Google Drive", "https://drive.google.com/drive/my-drive", ""],
             ["Docs", "https://docs.google.com/document/u/0/", ""],
             ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", ""],
-            ["Figma", "https://www.figma.com/", ""]
+            ["Figma", "https://www.figma.com/", ""],
+            ["HackerNews", "https://news.ycombinator.com/", ""]
         ]
     }
 }
@@ -160,13 +159,11 @@ function buildLinkGrid(container, preferences) {
     }
     let gridLinksObj = preferences.grid_links;
 
-    for (let topic in gridLinksObj) {
-        gridLinksObj[topic].forEach(link => {
-            container.appendChild( 
-                getGridItem(...link)
-            );
-        });
-    }
+    gridLinksObj.common_websites.forEach(link => {
+        console.log(link);
+        container.appendChild(getGridItem(...link));
+    });
+
 }
 
 function buildSearch(mountpoint) {
@@ -193,7 +190,24 @@ function buildSections(mountpoint, preferences) {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
+    let viewFullScreen = document.getElementById("view-fullscreen");
+    if (viewFullScreen) {
+        viewFullScreen.addEventListener("click", function() {
+            let docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            } else if (docElm.msRequestFullscreen) {
+                docElm.msRequestFullscreen();
+            } else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            } else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        });
+    }
+    runClickEvent(viewFullScreen);
     const preferences = get_or_setPreferences(DEFAULT_PREFERENCES);
     let mountpoint = get(DEFAULT_MOUNTPOINT_SELECTOR);
 
@@ -214,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(form.elements);
             addLink(name, url, img_url, preferences);
             form.remove();
-            event.preventDefault();
         });
         // Implement way to abort form.
     });
@@ -297,13 +310,18 @@ function addLink(name, url, img_url, preferences) {
     console.log("Updated preferences.")
 }
 
-function removeLink(namespace, name, preferences) {
-
+// Will remove all occurances of that name.
+function removeLink(name, preferences) {
+    let new_preferences = preferences.grid_links.common_websites.filter(function (item) {
+        return item[0] !== name
+    });
 }
 
 function settingsButtonHandler(event) {
 
 }
+
+
 
 function runClickEvent(element) {
     var evt = new window.MouseEvent('click', {
