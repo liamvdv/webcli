@@ -1,0 +1,113 @@
+:root {
+    --box-color: #fff;
+    --fg-color: #0095FF;
+    --bg-color: #fff;
+    --box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    --box-shadow-hover: 0 8px 8px 0 rgba(0,0,0,0.2);
+    --border-radius: 0.4rem;
+    --border-color: #5F6368;
+}   
+
+* {
+    margin: none;
+    padding: none;
+    box-sizing: border-box;
+
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Non scrollable*/
+html, body {
+    margin:0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.webtop {
+    display: none;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    margin: 0 1rem 0 1rem;
+}
+
+.current-webtop {
+    display: block;
+    height: 100%;
+}
+
+
+/*+++++++++++++++++++++++++++ Icon Grid Element ++++++++++++++++++++++++++++++*/
+.icon-grid {
+    display: grid;
+    grid-gap: 1.2rem;
+    grid-template-columns: repeat(6, minmax(3rem, 1fr));
+    grid-auto-rows: minmax(3rem, 1fr);
+}
+
+/*+++++++++++++++++++++++++++++ Icon Element +++++++++++++++++++++++++++++++++*/
+.icon {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.icon a {
+    height: 100%;
+    width: 100%;
+}
+
+.icon a img {
+    width: 100%;
+    height: minmax(auto, 3rem);
+}
+
+.icon:hover {
+    box-shadow: var(--box-shadow-hover);
+}
+
+/*++++++++++++++++++++++++++++++++ Edit Icon +++++++++++++++++++++++++++++++++*/
+.overlay-form {
+    width: 40%;
+    height: auto;
+    z-index: 999;
+    position: absolute;
+    top: 25%;
+    left: 30%;
+
+    padding: 1rem;
+    background-color: var(--bg-color);
+    box-shadow: var(--box-shadow);
+    border: 1px solid #ada9a9;
+    border-radius: var(--border-radius);
+}
+
+.text-input {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin: 0 0 1.5rem 0;
+}
+
+.btn {
+    float: right;
+    padding: 0.4rem;
+    color: var(--bg-color);
+    background-color: var(--fg-color);
+    border: none;
+    border-radius: var(--border-radius);
+}
+
+.save-edit {
+    background-color: aquamarine;
+}
+
+.quit-edit {
+    position: absolute;
+    background-color: #F05923;
+    color: white;
+    top: -10px;
+    right: -10px;
+}
