@@ -1,119 +1,51 @@
-const defaultConfig = {
-    "webtop0": {
-        "iconGrid": [
-            ["DockerHub", "https://hub.docker.com/?ref=login", ""],
-            ["GitHub", "https://www.github.com", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"],
-            ["Google Drive", "https://drive.google.com/drive/my-drive", ""],
-            ["Docs", "https://docs.google.com/document/u/0/", ""],
-            ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", ""],
-            ["Figma", "https://www.figma.com/", ""],
-            ["HackerNews", "https://news.ycombinator.com/", ""]
-        ]
+/* Globals */
+const wts = {  // webtops holds the HTML Elems references, wt0, wt1, wt2,...
+    init: function () {
+        let wts = getEls(".wt");
+        wts.forEach((wt, idx) => {
+            let name = "wt" + idx; 
+            this[name] = wt;
+        });
+        this.current = wts[0];
+        this.length = wts.length;
     },
-    "webtop1": {
-        "iconGrid": [
-            ["DockerHub", "https://hub.docker.com/?ref=login", ""],
-            ["GitHub", "https://www.github.com", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"],
-            ["Google Drive", "https://drive.google.com/drive/my-drive", ""],
-            ["Docs", "https://docs.google.com/document/u/0/", ""],
-            ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", ""],
-            ["Figma", "https://www.figma.com/", ""],
-            ["HackerNews", "https://news.ycombinator.com/", ""]
-        ]
+    changeCurrent: function (toWtIdx) {
+        if (this.current) this.current.classList.remove("current-wt");
+
+        this.current = this["wt" + toWtIdx];
+        this.current.classList.add("current-wt");
+    }
+}
+const localConfig = {
+    init: function() {
+        this.data = getConfig();
     },
-    "webtop2": {
-        "iconGrid": [
-            ["DockerHub", "https://hub.docker.com/?ref=login", ""],
-            ["GitHub", "https://www.github.com", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"],
-            ["Google Drive", "https://drive.google.com/drive/my-drive", ""],
-            ["Docs", "https://docs.google.com/document/u/0/", ""],
-            ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", ""],
-            ["Figma", "https://www.figma.com/", ""],
-            ["HackerNews", "https://news.ycombinator.com/", ""]
-        ]
+    getFor: function(widgetName) {
+        return this.data[wts.current.id][widgetName];
+    },
+    setFor: function (widgetName, value) {
+        ;
     }
 }
 
-// global vars
-let localConfig = getConfig(); // devided by webtop id
-let webtops = {
-    // "webtopN": webtopElem //id
-};
-let currentWebtop; // Elem
+localConfig.init()
 
-
-function setConfig(config) {
-    localStorage.setItem('config', JSON.stringify(config));
-    return config;
-}
-
-function getConfig() {
-    const stringConfig = localStorage.getItem("config");
-
-    if (stringConfig) return JSON.parse(stringConfig);
-    else return setConfig(defaultConfig);
-}
-
-
-function rotateWebtop(by=1) {
-    let wtId = currentWebtop.id;
-    let cNum = parseInt(wtId.charAt(wtId.length - 1));
-    cNum = (cNum + by) % Object.keys(webtops).length;
-    currentWebtop.classList.remove("current-webtop");
-
-    wtId = "#webtop" + cNum;
-    currentWebtop = getElem(wtId);
-    currentWebtop.classList.add("current-webtop");
-}
-
-function changeWebtop(to=0) {
-    // to is the Idx so 0 <= to < webtops.length
-    let maxIdx = Object.keys(webtops).length-1;
-    if (to > maxIdx) console.log(`<changeDesktop> ${to} is higher than the number of Webtops you have.`);
-    else {
-        let wtId = "#webtop" + to;
-        currentWebtop.classList.remove("current-webtop");
-        currentWebtop = getElem(wtId);
-        currentWebtop.classList.add("current-webtop");
-    }
-}
-
-function initWebtops() {
-    const wts = getElems(".webtop");
-    wts.forEach(function (wt, idx) {
-        let name = "webtop" + idx;
-        webtops[name] = wt;
-    });
-    currentWebtop = wts[0];
-}
 
 document.addEventListener("DOMContentLoaded", function(e) {
-    initWebtops();
-    renderIconGrid(localConfig[currentWebtop.id]["iconGrid"], currentWebtop, 6, 3, 10, 9);
-
-    const changeBtn = getElem("#change-config-icon")
-    changeBtn.addEventListener("click", () => renderIconEditForm()); 
+    wts.init();
+    
+    renderIconGrid(localConfig.data[wts.current.id]["iconGrid"], wts.current);
 });
 
+// Shortcuts logic
 document.addEventListener("keydown", function (event) {
-    if (event.altKey) {
-        if (event.shiftKey) {
-            rotateWebtop(1);
-            console.log("rotateWebtop fired");
-        } else if (!isNaN(event.key)) {
-            changeWebtop(parseInt(event.key) - 1);
-        }
-    } 
+    if      (event.altKey && event.shiftKey)    rotateWt(wts, 1);
+    else if (event.altKey && !isNaN(event.key)) changeWt(wts, parseInt(event.key) - 1);
 });
 
-
+/*
 // ###################### Helper Functions ####################################
-function getElem(selector) {
-    return document.querySelector(selector);
-}
-function getElems(selector) {
-    return document.querySelectorAll(selector);
-}
+
 
 function createElem(ofString) {
     let template = document.createElement("template");
@@ -121,30 +53,11 @@ function createElem(ofString) {
     return template.content;
 }
 
-function createSizeStyle(yS, xS, yE, xE) {
-    // x = column; y = row;
-    // don't worry about adding one, just say from which to which it should span
-    const style = `
-        grid-area: ${yS} / ${xS} / ${yE+1} / ${xE+1};
-    `;
-    return style;
-}
 // ####################### End Helper Functions ################################
 
 
 
 // ############################### ELEMENTS ####################################
-
-function createIcon(name, targetUrl, imgSrc) {
-    const iconTemplate = `
-        <div class="icon">
-            <a href="${targetUrl}" target="_blank">
-                <img src="${imgSrc}" alt="${name}">
-            </a>
-        </div>
-    `;
-    return createElem(iconTemplate);
-}
 
 function renderIcon(iconValues, container, rS, cS, rE, cE) {
     // iconValues = [name, targetUrl, imgSrc]
@@ -160,16 +73,7 @@ function createIconGrid() {
     return iconGrid;
 }
 
-function renderIconGrid(iconsValues, container, rS, cS, rE, cE) {
-    const iconGridElem = createIconGrid();
-    iconGridElem.setAttribute("style", createSizeStyle(rS, cS, rE, cE));
-    let iconElem;
-    iconsValues.forEach(function (iconValues) {
-        iconElem = createIcon(...iconValues);
-        iconGridElem.appendChild(iconElem);
-    });
-    container.appendChild(iconGridElem);
-}
+
 
 function createIconEditForm(name="", targetUrl="", imgSrc="") {
     const iconEditTemplate = `
@@ -218,3 +122,4 @@ function initIconEditFormEventListeners(elem) {
         elem.remove();
     });
 } 
+*/

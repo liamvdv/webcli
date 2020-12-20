@@ -25,15 +25,15 @@ html, body {
     overflow: hidden;
 }
 
-.webtop {
+.wt {
     display: none;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(12, 1fr);
     margin: 0 1rem 0 1rem;
 }
 
-.current-webtop {
-    display: block;
+.current-wt {
+    display: grid;
     height: 100%;
 }
 
