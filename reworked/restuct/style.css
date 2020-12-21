@@ -2,6 +2,7 @@
     --box-color: #fff;
     --fg-color: #0095FF;
     --bg-color: #fff;
+    --light-color: #CDCDCD;
     --box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     --box-shadow-hover: 0 8px 8px 0 rgba(0,0,0,0.2);
     --border-radius: 0.4rem;
@@ -18,25 +19,43 @@
     font-weight: 400;
 }
 
+a {
+    color: var(--fg-color);
+}
+
+
 /* Non scrollable*/
 html, body {
     margin:0;
     height: 100vh;
     overflow: hidden;
+    margin: 0 1rem 0 1rem;
 }
 
 .wt {
     display: none;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(12, 1fr);
-    margin: 0 1rem 0 1rem;
 }
 
 .current-wt {
     display: grid;
-    height: 100%;
+    height: 96%;
 }
 
+footer {
+    color: var(--light-color);
+    width: 100%;
+    height: 3%;
+}
+
+footer a {
+    color: var(--light-color);
+}
+
+footer p {
+
+}
 
 /*+++++++++++++++++++++++++++ Icon Grid Element ++++++++++++++++++++++++++++++*/
 .icon-grid {
@@ -46,7 +65,7 @@ html, body {
     grid-auto-rows: minmax(3rem, 1fr);
 }
 
-/*+++++++++++++++++++++++++++++ Icon Element +++++++++++++++++++++++++++++++++*/
+/* + + + Icon Element + + + */
 .icon {
     border: none;
     border-radius: var(--border-radius);
@@ -55,28 +74,68 @@ html, body {
 }
 
 .icon a {
+    display: block;
     height: 100%;
     width: 100%;
 }
 
 .icon a img {
-    width: 100%;
-    height: minmax(auto, 3rem);
+    width: 95%;
+    height: minmax(auto, 100%);
 }
 
 .icon:hover {
     box-shadow: var(--box-shadow-hover);
 }
 
-/*++++++++++++++++++++++++++++++++ Edit Icon +++++++++++++++++++++++++++++++++*/
-.overlay-form {
-    width: 40%;
-    height: auto;
-    z-index: 999;
-    position: absolute;
-    top: 25%;
-    left: 30%;
+/* + + + Searchbar Element + + + */
+.search {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
 
+.searchbar {
+    width: 80%;
+    border: 1px solid #ada9a9;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+    opacity: 0.7;
+}
+
+.searchbar:hover {
+    box-shadow: var(--box-shadow-hover);
+}
+
+
+/* + + + Edit Icon + + + */
+.btn {
+    border-radius: var(--border-radius);
+    border: none;
+    background-color: var(--bg-color);
+    color: var(--bg-color); 
+    padding: 0.4rem;
+}
+
+
+#edit-config { 
+    float: right;
+    border: none; 
+    background-color: var(--bg-color);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
+    color: var(--fg-color);
+}
+
+.save-edit:hover,
+#edit-config:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
+    transform: translateY(-0.2rem);
+}
+
+.edit-form {
+    z-index: 999;
+    position: relative;
     padding: 1rem;
     background-color: var(--bg-color);
     box-shadow: var(--box-shadow);
@@ -91,23 +150,20 @@ html, body {
     margin: 0 0 1.5rem 0;
 }
 
-.btn {
-    float: right;
-    padding: 0.4rem;
-    color: var(--bg-color);
-    background-color: var(--fg-color);
-    border: none;
-    border-radius: var(--border-radius);
+.select-input {
+   margin: 0 0 1.5rem 0;
 }
 
 .save-edit {
-    background-color: aquamarine;
+    width: 100%;
+    float: left;
+    background-color: var(--fg-color);
 }
 
 .quit-edit {
     position: absolute;
-    background-color: #F05923;
     color: white;
+    background-color: #F05923;
     top: -10px;
     right: -10px;
 }
