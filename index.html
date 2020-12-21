@@ -4,9 +4,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css">        
+        <script src="helpers.js"></script>
         <script src="index.js"></script>
-        <title>WebDash</title>
+        <title>Webtop</title>
     </head>
     <body>
         <header>
@@ -15,19 +16,17 @@
                 Please allow JavaScript in your Web Browser.
             </noscript>
         </header>
-        <main>
-            
-        </main>
+        <section id="wt0" class="wt current-wt"></section>
+        <section id="wt1" class="wt"></section>
+        <section id="wt2" class="wt"></section>
         <footer>
-            <div>
-                Made with vanilla JavaScript by
+            <span>
+                Made with ♥ by
                 <a href="https://github.com/Liamvdv">Liamvdv</a>.
-                See source code
-                <a href="https://github.com/Liamvdv/liamvdv.github.io">here</a>.
-                <button class="btn" id="settings-btn">
-                    Settings
-                </button>
-            </div>
+                See
+                <a href="https://github.com/Liamvdv/liamvdv.github.io">Source Code</a>.
+            </span>
+            <button id="edit-config" class="btn">Customise</button>
         </footer>
-        <button id="view-fullscreen"></button>
     </body>
+</html>
