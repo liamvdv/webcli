@@ -14,6 +14,7 @@ const wts = {  // webtops holds the HTML Elems references, wt0, wt1, wt2,...
 
         this.current = this["wt" + toWtIdx];
         this.current.classList.add("current-wt");
+        render(this.current, localConfig.data[this.current.id]);
     }
 }
 const localConfig = {
@@ -33,8 +34,7 @@ localConfig.init()
 
 document.addEventListener("DOMContentLoaded", function(e) {
     wts.init();
-    renderIconGrid(localConfig.data[wts.current.id]["iconGrid"], wts.current);
-    renderSearchbar(wts.current);
+    wts.changeCurrent(0);
 
     const editBtn = getEl("#edit-config");
     editBtn.addEventListener("click", e => {

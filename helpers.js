@@ -41,6 +41,9 @@ function addPositioning(elem, yS, xS, yE, xE) {
 /* Config */
 const defaultConfig = { // the ids of the webtops map to their storage model
     "wt0": {
+        "searchbar": {
+            "engineBaseUrl": "https://www.google.com/search?q="
+        },
         "iconGrid": [
             ["DockerHub", "https://hub.docker.com/?ref=login", ""],
             ["GitHub", "https://www.github.com", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"],
@@ -76,6 +79,7 @@ const defaultConfig = { // the ids of the webtops map to their storage model
 }
 
 function setConfig(config) {
+    if (!config) config = defaultConfig;
     const serialisedConfig = JSON.stringify(config);
     localStorage.setItem('config', serialisedConfig);
     return config;
@@ -160,7 +164,9 @@ function renderSearchbar(container, positioning=[3, 3, 3, 10], placeholderText="
     createSearchbarListener(searchbarEl);
 }
 
-function runSearchEvent(searchterm, engineBaseUrl="https://www.google.com/search?q=") {
+function runSearchEvent(searchterm, engineBaseUrl="") {
+    if (!engineBaseUrl) engineBaseUrl = localConfig[wts.current.id]["searchbar"].engineBaseUrl;
+
     let searchUrl;
     if (searchterm.startsWith("http://") 
         || searchterm.startsWith("https://")
@@ -249,3 +255,18 @@ function renderIconEditForm(defaultIcon=["", "", ""], container, positioning=[4,
 
 }
 
+/* + + + Render Webtops + + + */
+
+function render(wt, wtConfig) {
+    if (wt === undefined) wt = wts.current;
+    if (wtConfig === undefined) wtConfig = localConfig.data[wt.id];
+
+    wt.innerHTML = ""; 
+
+    Object.keys(wtConfig).forEach(sectionSlug => {
+        // add sectionSlug for every widget
+        // sections slugs must be keys in the config to be rendered ("wt0" { searchbar: "notImportantValue"})
+        if (sectionSlug === "searchbar") return renderSearchbar(wt);
+        else if (sectionSlug === "iconGrid") return renderIconGrid(localConfig.data[wt.id].iconGrid); 
+    });
+}
