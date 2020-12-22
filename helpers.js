@@ -67,13 +67,13 @@ const defaultConfig = { // the ids of the webtops map to their storage model
             "rows": 2,
             "cols": 6, 
             "icons": [
-                ["DockerHub", "https://hub.docker.com/?ref=login", ""],
+                ["DockerHub", "https://hub.docker.com/?ref=login", "https://ertan-toker.de/wp-content/uploads/2018/05/docker-container-logo-thegem-blog-default.png"],
                 ["GitHub", "https://www.github.com", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"],
-                ["Google Drive", "https://drive.google.com/drive/my-drive", ""],
-                ["Docs", "https://docs.google.com/document/u/0/", ""],
-                ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", ""],
-                ["Figma", "https://www.figma.com/", ""],
-                ["HackerNews", "https://news.ycombinator.com/", ""]
+                ["Google Drive", "https://drive.google.com/drive/my-drive", "https://play-lh.googleusercontent.com/t-juVwXA8lDAk8uQ2L6d6K83jpgQoqmK1icB_l9yvhIAQ2QT_1XbRwg5IpY08906qEw"],
+                ["Docs", "https://docs.google.com/document/u/0/", "https://www.googlewatchblog.de/wp-content/uploads/google-docs-logo-1.jpg?w=640"],
+                ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", "https://www.klipfolio.com/sites/default/files/blog/google-sheets-blog-banner.png"],
+                ["Figma", "https://www.figma.com/", "https://yt3.ggpht.com/ytc/AAUvwngedleQSjBTUabDr5IuXLEaMLy6lSCFMPzBi00V5w=s900-c-k-c0x00ffffff-no-rj"],
+                ["HackerNews", "https://news.ycombinator.com/", "https://pbs.twimg.com/profile_images/469397708986269696/iUrYEOpJ_400x400.png"]
             ]
         },
         "weatherWidget": null // does not exists currently -> null : off
@@ -103,13 +103,13 @@ const defaultConfig = { // the ids of the webtops map to their storage model
             "rows": 5, // IDEA
             "cols": 6, // IDEA
             "icons": [
-                ["DockerHub", "https://hub.docker.com/?ref=login", ""],
+                ["DockerHub", "https://hub.docker.com/?ref=login", "https://ertan-toker.de/wp-content/uploads/2018/05/docker-container-logo-thegem-blog-default.png"],
                 ["GitHub", "https://www.github.com", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"],
-                ["Google Drive", "https://drive.google.com/drive/my-drive", ""],
-                ["Docs", "https://docs.google.com/document/u/0/", ""],
-                ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", ""],
-                ["Figma", "https://www.figma.com/", ""],
-                ["HackerNews", "https://news.ycombinator.com/", ""]
+                ["Google Drive", "https://drive.google.com/drive/my-drive", "https://play-lh.googleusercontent.com/t-juVwXA8lDAk8uQ2L6d6K83jpgQoqmK1icB_l9yvhIAQ2QT_1XbRwg5IpY08906qEw"],
+                ["Docs", "https://docs.google.com/document/u/0/", "https://www.googlewatchblog.de/wp-content/uploads/google-docs-logo-1.jpg?w=640"],
+                ["Spreadsheets", "https://docs.google.com/spreadsheets/u/0/", "https://www.klipfolio.com/sites/default/files/blog/google-sheets-blog-banner.png"],
+                ["Figma", "https://www.figma.com/", "https://yt3.ggpht.com/ytc/AAUvwngedleQSjBTUabDr5IuXLEaMLy6lSCFMPzBi00V5w=s900-c-k-c0x00ffffff-no-rj"],
+                ["HackerNews", "https://news.ycombinator.com/", "https://pbs.twimg.com/profile_images/469397708986269696/iUrYEOpJ_400x400.png"]
             ]
         },
         "weatherWidget": null
@@ -135,7 +135,7 @@ function getConfig() {
 function addIcon(wtId, name, targetUrl, imgUrl) {
     let iconGridData = localConfig.get("iconGrid", wtId);
     iconGridData.icons.push([name, targetUrl, imgUrl]);
-    localConfig.set("iconGrid", iconGridData, wtId);
+    localConfig.set("iconGrid", iconGridData, wts[wtId]);
 
-    render(wtId);
+    render(wts[wtId]);
 }
