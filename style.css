@@ -44,7 +44,6 @@ html, body {
 }
 
 footer {
-    color: var(--light-color);
     width: 100%;
     height: 3%;
 }
@@ -53,8 +52,8 @@ footer a {
     color: var(--light-color);
 }
 
-footer p {
-
+footer span {
+    color: var(--light-color);
 }
 
 /*+++++++++++++++++++++++++++ Icon Grid Element ++++++++++++++++++++++++++++++*/
@@ -116,6 +115,7 @@ footer p {
     background-color: var(--bg-color);
     color: var(--bg-color); 
     padding: 0.4rem;
+    float: right;
 }
 
 
@@ -167,4 +167,10 @@ footer p {
     background-color: #F05923;
     top: -10px;
     right: -10px;
+}
+
+
+.to-edit-form {
+    background-color: var(--fg-color);
+    padding: 0.2rem;
 }
