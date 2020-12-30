@@ -9,13 +9,29 @@ const wts = {  // webtops holds the HTML Elems references, wt0, wt1, wt2,...
         this.current = wts[0];
         this.length = wts.length;
     },
-    changeCurrent: function (toWtIdx) {
+    changeCurrent: function (toIdx) { // one indexed
         if (this.current) this.current.classList.remove("current-wt");
 
-        this.current = this["wt" + toWtIdx];
+        this.current = this["wt" + toIdx];
         this.current.classList.add("current-wt");
         render(this.current, localConfig.get("all", this.current.id));
     }
+}
+
+const widgetRegistry = {
+    iconGrid: {
+        render: renderIconGrid,
+        edit: renderIconEditForm,
+        add: addIcon,
+        remove: "removeIcon"
+    },
+    search: {
+        render: renderSearch,
+        edit: renderSearchEditForm,
+        add: "addSearch",
+        remove: "removeSearch"
+    } /*,
+    weather: weather */
 }
 
 const localConfig = {
@@ -30,7 +46,8 @@ const localConfig = {
     },
     set: function (widgetName, value, wt=null) {
         if (!wt) wt = wts.current;
-        this.data[wt.id][widgetName] = value; 
+        this.data[wt.id][widgetName] = value;
+        setConfig(this.data);
     },
     reset: function () {
         this.data = setConfig(defaultConfig);
@@ -52,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 // Shortcuts logic
 document.addEventListener("keydown", function (event) {
     if      (event.altKey && event.shiftKey)    rotateWt(wts, 1);
-    else if (event.altKey && !isNaN(event.key)) changeWt(wts, parseInt(event.key) - 1);
+    else if (event.altKey && !isNaN(event.key)) changeWt(wts, parseInt(event.key));
 });
 
 

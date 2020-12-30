@@ -7,9 +7,9 @@ function render(wt=null, wtConfig=null) {
 
     wt.innerHTML = ""; 
 
-    Object.keys(wtConfig).forEach(widgetName => {
-        if (widgetName === "search" && wtConfig[widgetName]) return renderSearchbar(wtConfig[widgetName], wt);
-        else if (widgetName === "iconGrid" && wtConfig[widgetName]) return renderIconGrid(wtConfig[widgetName], wt); 
+    Object.keys(wtConfig).forEach(widgetName => {   
+        if (widgetName === "search" && wtConfig[widgetName])        renderSearch(wtConfig[widgetName], wt);
+        else if (widgetName === "iconGrid" && wtConfig[widgetName]) renderIconGrid(wtConfig[widgetName], wt); 
         // add more widgets here with their respective rendering function
     });
 }
@@ -57,7 +57,7 @@ function createSearchbarEl(text) {
     return create("input", {class: "searchbar", type: "text", autofocus: true, placeholder: text});
 }
 
-function renderSearchbar(searchData, wt=null) {
+function renderSearch(searchData, wt=null) {
     if (!wt) wt = wts.current;
 
     const searchEl = createSearch();
@@ -101,9 +101,10 @@ function createQuitEditListener(formEl) { // helper for multiple
 }
 
 function renderEditFormFor(widgetName) { // helper for createEditMenuEl
-    if (widgetName === "iconGrid") renderIconEditForm();
+    /* if (widgetName === "iconGrid") renderIconEditForm();
     else if (widgetName === "search") renderSearchEditForm();
-    else console.log(`renderEditFormFor ${widgetName} not implemented yet.`);
+    else console.log(`renderEditFormFor ${widgetName} not implemented yet.`); */
+    return widgetRegistry[widgetName].edit // callable
 }
 
 // General
@@ -122,6 +123,7 @@ function createEditMenuEl(wtConfig) {
             </p>
         `.trim();
     });
+    div.innerHTML += "<p>Only iconGrid is currently implemented.</p>"
     return div;
 }
 
@@ -145,7 +147,7 @@ function createIconEditFormEl(name="", targetUrl="", imgUrl="") {
 
     let options = "";
     getEls(".wt").forEach(wt => {
-        options += `<option value="${wt.id}">Webtop ${wt.id.slice(-1)}</option>`;
+        options += `<option value="${wt.id}">Webtop ${wt.id.slice(-1) + 1}</option>`;
     });
 
     const innerHTML = `
@@ -182,7 +184,7 @@ function createIconEditFormListeners(formEl) {
     createQuitEditListener(formEl);
 }
 
-function renderIconEditForm(defaultIcon=["", "", ""], wt=null, positioning=[4, 5, 8, 8]) {
+function renderIconEditForm(defaultIcon=["", "", ""], wt=null, positioning=defaultEditElPositioning) {
     if (!wt) wt = wts.current;
 
     const formEl = createIconEditFormEl(...defaultIcon);

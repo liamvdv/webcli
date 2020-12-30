@@ -7,8 +7,7 @@ function rotateWt(wts, by=1) {
 }
 
 // Fire with Alt + <NUM>
-function changeWt(wts, to=0) {
-    const maxIdx = wts.length - 1;
-    if (to > maxIdx) console.log(`<changeWt> ${to} is higher than the number of Webtops you have.`);
-    else wts.changeCurrent(to);
+function changeWt(wts, to=1) {
+    if (to >= wts.length) console.log(`<changeWt> ${to} is higher than the number of Webtops you have.`);
+    else wts.changeCurrent(to - 1);
 }
