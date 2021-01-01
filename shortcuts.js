@@ -11,3 +11,67 @@ function changeWt(wts, to=1) {
     if (to >= wts.length) console.log(`<changeWt> ${to} is higher than the number of Webtops you have.`);
     else wts.changeCurrent(to - 1);
 }
+
+
+/* + + + Cli + + + */
+const cli = {
+    run: function (inputString) {
+        if (inputString[0] === ">") cli.handle(inputString.slice(1));
+        else runSearchEvent(inputString);
+    },
+    handle: function (str) {
+        // decompose str to command and its args and call them. 
+        const commandExpressions = str.split("|")
+        let pipeStorage;
+        let command, args, kwargs; 
+        commandExpressions.forEach(commandStr => {
+            [command, args, kwargs] = decomposeCommand(commandStr);
+            if (pipeStorage !== undefined) kwargs["piped"] = pipeStorage; // pipe through kwargs object
+
+            commandFunc = commandRegistry[command];
+            if (!commandFunc) return getEl("#searchbar").value = ""; //TODO: say user that it doesn't exist
+            pipeStorage = commandFunc(...args, kwargs); // call command
+        });
+    }
+}
+
+const commandRegistry = {
+    l: function (port){
+        let url = "//127.0.0.1:" + port;
+        runSearchEvent(url, "");
+    }
+}
+
+function decomposeCommand(str) {
+    // Returns the command name with an array of args and object of kwargs and flags
+    let command;
+    let args = [];
+    let kwargs = {};
+
+    [command, ...unformattedArgs] = str.trim().split(/\s+/);
+    let priorKwarg; let priorKwargFlag = false;
+    for (let s of unformattedArgs) {
+        if (s.startsWith("-")) {
+            // its a kwarg or flag
+            if (priorKwargFlag) kwargs[priorKwarg] = true; // two following kwargs means that the prior one is a flag.
+            else priorKwargFlag = true;
+            priorKwarg = s.slice(1); // remove the dash and add as kwarg or flag
+        } else {
+            // s is a required arg or arg to kwarg
+            if (priorKwargFlag) {
+                // arg to kwarg
+                if (!isNaN(s)) s = parseInt(s);
+
+                kwargs[priorKwarg] = s; 
+                priorKwargFlag = false;
+                priorKwarg = undefined;
+            } else {
+                // needed arg to command
+                if (isNaN(s)) args.push(s);
+                else args.push(parseInt(s));
+            }
+        }
+        if (priorKwargFlag) kwargs[priorKwarg] = true; // if last argument was flag
+    }
+    return [command, args, kwargs];
+}

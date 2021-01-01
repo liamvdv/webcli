@@ -58,7 +58,6 @@ const localConfig = {
 
 localConfig.init()
 
-
 document.addEventListener("DOMContentLoaded", function(e) {
     wts.init();
     wts.changeCurrent(0);

@@ -72,8 +72,8 @@ function renderSearch(searchData, wt=null) {
     createSearchbarListener(searchbarEl);
 }
 
-function runSearchEvent(searchterm, engineBaseUrl="") { // helper for createSearchbarListener
-    if (!engineBaseUrl) engineBaseUrl = localConfig.get("search").engineBaseUrl;
+function runSearchEvent(searchterm, engineBaseUrl=null) { // helper for createSearchbarListener
+    if (engineBaseUrl === null) engineBaseUrl = localConfig.get("search").engineBaseUrl;
 
     let searchUrl;
     if (searchterm.startsWith("http://") 
@@ -88,7 +88,7 @@ function runSearchEvent(searchterm, engineBaseUrl="") { // helper for createSear
 
 function createSearchbarListener(searchbarEl) {
     searchbarEl.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") runSearchEvent(searchbarEl.value);
+        if (event.key === "Enter") cli.run(searchbarEl.value);
     });
 }
 
