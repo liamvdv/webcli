@@ -174,3 +174,8 @@ footer span {
     background-color: var(--fg-color);
     padding: 0.2rem;
 }
+
+
+#search-edit-form label {
+    margin: 0 0 1rem 0;
+}

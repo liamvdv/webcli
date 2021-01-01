@@ -5,12 +5,14 @@ function render(wt=null, wtConfig=null) {
 
     if (!wtConfig) wtConfig = localConfig.get("all", wt.id);
 
-    wt.innerHTML = ""; 
+    wt.innerHTML = ""; // reset
 
-    Object.keys(wtConfig).forEach(widgetName => {   
-        if (widgetName === "search" && wtConfig[widgetName])        renderSearch(wtConfig[widgetName], wt);
-        else if (widgetName === "iconGrid" && wtConfig[widgetName]) renderIconGrid(wtConfig[widgetName], wt); 
-        // add more widgets here with their respective rendering function
+    let func;
+    Object.keys(wtConfig).forEach(widgetName => {
+        if (wtConfig[widgetName] !== null) {
+            func = widgetRegistry[widgetName].render;
+            func(wtConfig[widgetName], wt);
+        }
     });
 }
 
@@ -93,6 +95,7 @@ function createSearchbarListener(searchbarEl) {
 
 
 /* + + + Edit Config + + + */
+// General
 function createQuitEditListener(formEl) { // helper for multiple
     getSubEl(formEl, ".quit-edit").addEventListener("click", function (event) {
         event.preventDefault();
@@ -104,10 +107,10 @@ function renderEditFormFor(widgetName) { // helper for createEditMenuEl
     /* if (widgetName === "iconGrid") renderIconEditForm();
     else if (widgetName === "search") renderSearchEditForm();
     else console.log(`renderEditFormFor ${widgetName} not implemented yet.`); */
-    return widgetRegistry[widgetName].edit // callable
+    const func = widgetRegistry[widgetName].edit
+    return func()
 }
 
-// General
 function createEditMenuEl(wtConfig) {
     if (!wtConfig) wtConfig = localConfig.get("all", wts.current.id);
 
@@ -123,7 +126,10 @@ function createEditMenuEl(wtConfig) {
             </p>
         `.trim();
     });
-    div.innerHTML += "<p>Only iconGrid is currently implemented.</p>"
+    div.innerHTML += `<p>\
+        ALT + DIGIT Change Webtop to <br>
+        ALT + SHIFT Rotate Webtop <br>
+    </p>`
     return div;
 }
 
@@ -138,7 +144,6 @@ function renderEditMenu(wt=null, positioning=defaultEditElPositioning) {
     wt.appendChild(editMenuEl);
 
     createQuitEditListener(editMenuEl);
-    // renderIconEditForm();  // QUIT FIX FOR NOW
 }
 
 // For Icons
@@ -147,7 +152,7 @@ function createIconEditFormEl(name="", targetUrl="", imgUrl="") {
 
     let options = "";
     getEls(".wt").forEach(wt => {
-        options += `<option value="${wt.id}">Webtop ${wt.id.slice(-1) + 1}</option>`;
+        options += `<option value="${wt.id}">Webtop ${parseInt(wt.id.slice(-1)) + 1}</option>`;
     });
 
     const innerHTML = `
@@ -194,10 +199,57 @@ function renderIconEditForm(defaultIcon=["", "", ""], wt=null, positioning=defau
     createIconEditFormListeners(formEl);
 }
 
+// For Search
+function createSearchEditFormEl(defaultEngine="Google") {
+    const form = create("form", {class: "edit-form", id: "search-edit-form"});
 
-// Search
+    let checkboxes = "";
+    Object.keys(searchEngines).forEach(name => {
+        let checkedAttr = "";
+        if (name == defaultEngine) checkedAttr = "checked";
+        checkboxes += `
+            <input type="radio" id="${name}" name="searchEngine" value="${searchEngines[name]}" ${checkedAttr}>
+            <label for="${name}">${name}</label><br>
+        `
+    });
 
-function renderSearchEditForm() {
-    // TODO
-    console.log("renderSearchEditForm not implemented yet.");
+    const innerHTML = `
+        <button class='quit-edit btn'>X</button>
+        <h3>Choose a different search engine</h3>
+        ${checkboxes}
+        <button class='btn save-edit'>Apply</button>
+    `;
+
+    form.innerHTML = innerHTML;
+    return form;
+}
+
+function createSearchEditFormListeners(formEl) {
+    formEl.addEventListener("submit", function (event) {
+        event.preventDefault()
+        let engine = searchEngines["Google"]; // default if none will be submitted
+
+        const checkedBox = getSubEl(formEl, "input:checked"); // gets first, others will be ignored
+        if (checkedBox !== null) engine = checkedBox.value;
+        changeSearchEngine(wts.current.id, engine)
+        formEl.remove()
+    });
+    createQuitEditListener(formEl);
+}
+
+function renderSearchEditForm(wt=null, positioning=defaultEditElPositioning) {
+    if (wt === null) wt = wts.current;
+
+    const formEl = createSearchEditFormEl();
+    addPositioning(formEl, ...positioning);
+    wt.appendChild(formEl);
+
+    createSearchEditFormListeners(formEl);
+}
+
+
+
+// weather
+function renderWeatherEditForm() {
+    alert("Not implemented yet.");
 }

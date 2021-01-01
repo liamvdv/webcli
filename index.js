@@ -22,7 +22,7 @@ const widgetRegistry = {
     iconGrid: {
         render: renderIconGrid,
         edit: renderIconEditForm,
-        add: addIcon,
+        add: addIcon, // should actually be something to remove an element, not changing the settings
         remove: "removeIcon"
     },
     search: {
@@ -30,8 +30,10 @@ const widgetRegistry = {
         edit: renderSearchEditForm,
         add: "addSearch",
         remove: "removeSearch"
-    } /*,
-    weather: weather */
+    },
+    weatherWidget: {
+        edit: renderWeatherEditForm
+    }
 }
 
 const localConfig = {

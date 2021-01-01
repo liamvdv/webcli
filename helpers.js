@@ -50,6 +50,12 @@ function runClickEvent(elem) {
 
 
 /* Config */
+const searchEngines = {
+    Google: "https://www.google.com/search?q=",
+    DuckDuckGo: "https://www.duckduckgo.com/?q=",
+    Bing: "https://www.bing.com/search?q=",
+    Ecosia: "https://www.ecosia.org/search?q="
+}
 
 const defaultEditElPositioning = [4, 5, 8, 8];
 const defaultFullPagePositioning = [3, 3, 10, 10]
@@ -136,6 +142,14 @@ function addIcon(wtId, name, targetUrl, imgUrl) {
     let iconGridData = localConfig.get("iconGrid", wtId);
     iconGridData.icons.push([name, targetUrl, imgUrl]);
     localConfig.set("iconGrid", iconGridData, wts[wtId]);
+
+    render(wts[wtId]);
+}
+
+function changeSearchEngine(wtId, engineUrl) {
+    let searchData = localConfig.get("search", wtId);
+    searchData.engineBaseUrl = engineUrl;
+    localConfig.set("search", searchData);
 
     render(wts[wtId]);
 }

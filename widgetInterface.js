@@ -1,5 +1,5 @@
 // Must be included in index.js widgetRegistry
-const weather = {
+const weatherInterface = {
     render: "callable",
     edit: "callable",
     add: "callable",
