@@ -80,7 +80,7 @@ function runSearchEvent(searchterm, engineBaseUrl=null) { // helper for createSe
         || searchterm.startsWith("https://")
         || searchterm.startsWith("www")
         ) searchUrl = searchterm;
-    else searchUrl = engineBaseUrl + searchterm.replace(/ +/g, "+");
+    else searchUrl = engineBaseUrl + searchterm.replace(/\s+/g, "+");
 
     const a = create("a", {href: searchUrl});
     runClickEvent(a);
@@ -251,5 +251,5 @@ function renderSearchEditForm(wt=null, positioning=defaultEditElPositioning) {
 
 // weather
 function renderWeatherEditForm() {
-    alert("Not implemented yet.");
+    helpConsole.log("Not implemented yet.", 2000);
 }

@@ -36,6 +36,18 @@ const widgetRegistry = {
     }
 }
 
+const helpConsole = {
+    init: function() {
+        this.el = getEl("#helpConsole");
+    },
+    log: function (msg, timeSec=5000) {
+        this.el.value = msg;
+        setTimeout(() => {
+            if (this.el.value == msg) this.el.value = "";
+        }, timeSec)
+    }
+}
+
 const localConfig = {
     init: function() {
         this.data = getConfig();
@@ -59,6 +71,8 @@ const localConfig = {
 localConfig.init()
 
 document.addEventListener("DOMContentLoaded", function(e) {
+    helpConsole.init();
+
     wts.init();
     wts.changeCurrent(0);
 

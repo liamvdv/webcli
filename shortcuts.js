@@ -16,7 +16,7 @@ function changeWt(wts, to=1) {
 /* + + + Cli + + + */
 const cli = {
     run: function (inputString) {
-        if (inputString[0] === ">") cli.handle(inputString.slice(1));
+        if (inputString[0] === ">") this.handle(inputString.slice(1));
         else runSearchEvent(inputString);
     },
     handle: function (str) {
@@ -29,16 +29,53 @@ const cli = {
             if (pipeStorage !== undefined) kwargs["piped"] = pipeStorage; // pipe through kwargs object
 
             commandFunc = commandRegistry[command];
-            if (!commandFunc) return getEl("#searchbar").value = ""; //TODO: say user that it doesn't exist
+            if (!commandFunc) return getEl("#searchbar").value = ""; //TODO: say user that command doesn't exist
             pipeStorage = commandFunc(...args, kwargs); // call command
         });
     }
 }
 
 const commandRegistry = {
-    l: function (port){
-        let url = "//127.0.0.1:" + port;
+    l: function (){
+        let args = [...arguments]; 
+        let kwargs = args.pop();
+        let url = "//127.0.0.1:" + args[0]; //port
         runSearchEvent(url, "");
+    },
+    amz: function () {
+        const searchBaseDE = "https://www.amazon.de/s?k=";
+        let args = [...arguments]; // not a real array
+        let kwargs = args.pop();
+
+        let searchterm = args.join("+");
+        let options = "";
+
+        const sort = {
+            asc: "&s=price-asc-rank",
+            desc: "&s=price-desc-rank",
+            new: "&s=date-desc-rank",
+            rev: "&s=review-rank"
+        }
+
+        if ("s" in kwargs) options += sort[kwargs.s];
+        const searchUrl = searchBaseDE + searchterm + options;
+        runSearchEvent(searchUrl, "");
+    },
+    so: function () {
+        const searchBase = "https://stackoverflow.com/search?q="
+        let args = [...arguments];
+        let kwargs = args.pop();
+
+        let searchterm = args.join("+");
+        
+        //TODO: add options (flags and kwargs) 
+
+        const searchUrl = searchBase + searchterm;
+        runSearchEvent(searchUrl, "");
+    },
+    help: function() {
+        const helpPage = "https://github.com/Liamvdv/liamvdv.github.io#quick-start";
+        runSearchEvent(helpPage, "");
     }
 }
 

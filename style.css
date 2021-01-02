@@ -56,6 +56,14 @@ footer span {
     color: var(--light-color);
 }
 
+footer input {
+    left: 25%;
+    width: 50%;
+    position: absolute;
+    background-color: #fff;
+    border: none;
+}
+
 /*+++++++++++++++++++++++++++ Icon Grid Element ++++++++++++++++++++++++++++++*/
 .icon-grid {
     display: grid;
