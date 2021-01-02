@@ -76,6 +76,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
     wts.init();
     wts.changeCurrent(0);
 
+    cli.init();
+
     const editBtn = getEl("#edit-config");
     editBtn.addEventListener("click", e => renderEditMenu());
 });
@@ -83,8 +85,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
 // Shortcuts logic
 document.addEventListener("keydown", function (event) {
-    if      (event.altKey && event.shiftKey)    rotateWt(wts, 1);
-    else if (event.altKey && !isNaN(event.key)) changeWt(wts, parseInt(event.key));
+    if      (event.altKey && event.shiftKey)        rotateWt(wts, 1);
+    else if (event.altKey && !isNaN(event.key))     changeWt(wts, parseInt(event.key));
+    else if (document.activeElement === cli.el && event.key === "ArrowUp")  cli.showPriorCommand();
+    else if (document.activeElement === cli.el && event.key === "ArrowDown")cli.showNextCommand();
 });
 
 

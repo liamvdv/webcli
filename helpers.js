@@ -114,18 +114,28 @@ const defaultConfig = { // the ids of the webtops map to their storage model
     }
 }
 
+function get(key) {
+    const serialisedValue = localStorage.getItem(key);
+    if (serialisedValue) return JSON.parse(serialisedValue);
+    else return null;
+}
+
+function set(key, value) {
+    if (typeof(value) !== String) value = JSON.stringify(value);
+    localStorage.setItem(key, value);
+}
+
 
 function setConfig(config) {
     if (!config) config = defaultConfig;
 
-    const serialisedConfig = JSON.stringify(config);
-    localStorage.setItem('config', serialisedConfig);
+    set("config", config);
     return config;
 }
 
 function getConfig() {
-    const serialisedConfig = localStorage.getItem("config");
-    if (serialisedConfig !== null) return JSON.parse(serialisedConfig);
+    const config = get("config");
+    if (config !== null) return config;
     else return setConfig(defaultConfig);
 }
 

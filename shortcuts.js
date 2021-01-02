@@ -8,19 +8,31 @@ function rotateWt(wts, by=1) {
 
 // Fire with Alt + <NUM>
 function changeWt(wts, to=1) {
-    if (to >= wts.length) console.log(`<changeWt> ${to} is higher than the number of Webtops you have.`);
+    if (to >= wts.length) helpConsole.log(`<changeWebtop> ${to} is higher than the number of Webtops you have.`);
     else wts.changeCurrent(to - 1);
 }
 
 
 /* + + + Cli + + + */
 const cli = {
+    init: function() {
+        this.el = getSubEl(wts.current, ".searchbar");
+        this.history = get("cliHistory") || [];
+        this.historyCursor = this.history.length;
+
+        if (this.history.length === 0) {
+            helpConsole.log('Hey you look smart! Type ">help" to also be effective.', 10000);
+        }
+    },
     run: function (inputString) {
-        if (inputString[0] === ">") this.handle(inputString.slice(1));
+        if (inputString[0] === ">") this.handle(inputString.trim().slice(1));
         else runSearchEvent(inputString);
     },
     handle: function (str) {
+        if (str === "") return;
+
         // decompose str to command and its args and call them. 
+        this.addToHistory(str);
         const commandExpressions = str.split("|")
         let pipeStorage;
         let command, args, kwargs; 
@@ -29,25 +41,51 @@ const cli = {
             if (pipeStorage !== undefined) kwargs["piped"] = pipeStorage; // pipe through kwargs object
 
             commandFunc = commandRegistry[command];
-            if (!commandFunc) return getEl("#searchbar").value = ""; //TODO: say user that command doesn't exist
-            pipeStorage = commandFunc(...args, kwargs); // call command
+            if (commandFunc) pipeStorage = commandFunc(args, kwargs);
+            else {
+                this.el.value = ""; //TODO: say user that command doesn't exist
+                helpConsole.log(`'${command}' not a command. Get an overview with >help`);
+            }
+            // call command
         });
+    },
+    addToHistory: function(exp) {
+        this.history.push(exp);
+        console.log(this.history);
+        if (this.history.length > 10) {
+            while(this.history.length > 10) this.history.shift();
+        }
+        set("cliHistory", this.history);
+    },
+    showPriorCommand: function() {
+        if (this.historyCursor == 0) return helpConsole.log("Reached history end.");
+
+        this.historyCursor--;
+        const exp = this.history[this.historyCursor];
+        this.el.value = ">" + exp;
+    },
+    showNextCommand: function () {
+        if (this.historyCursor == this.history.length-1) return helpConsole.log("Reached history start.");
+
+        this.historyCursor++;
+        const exp = this.history[this.historyCursor];
+        this.el.value = ">" + exp;
+    },
+    clearHistory: function () {
+        set("cliHistory", []);
     }
 }
 
+
 const commandRegistry = {
-    l: function (){
-        let args = [...arguments]; 
-        let kwargs = args.pop();
-        let url = "//127.0.0.1:" + args[0]; //port
+    l: function (args, kwargs){
+        let url = "http://127.0.0.1:" + args[0]; //port
         runSearchEvent(url, "");
     },
-    amz: function () {
+    amz: function (args, kwargs) {
         const searchBaseDE = "https://www.amazon.de/s?k=";
-        let args = [...arguments]; // not a real array
-        let kwargs = args.pop();
 
-        let searchterm = args.join("+");
+        let searchterm = encodeUrl(args.join(" "));
         let options = "";
 
         const sort = {
@@ -57,25 +95,47 @@ const commandRegistry = {
             rev: "&s=review-rank"
         }
 
-        if ("s" in kwargs) options += sort[kwargs.s];
+        if (kwargs.s) options += sort[kwargs.s];
         const searchUrl = searchBaseDE + searchterm + options;
         runSearchEvent(searchUrl, "");
     },
-    so: function () {
+    so: function(args, kwargs) {
         const searchBase = "https://stackoverflow.com/search?q="
-        let args = [...arguments];
-        let kwargs = args.pop();
 
-        let searchterm = args.join("+");
+        let searchterm = encodeUrl(args.join(" "));
         
         //TODO: add options (flags and kwargs) 
 
         const searchUrl = searchBase + searchterm;
         runSearchEvent(searchUrl, "");
     },
-    help: function() {
-        const helpPage = "https://github.com/Liamvdv/liamvdv.github.io#quick-start";
-        runSearchEvent(helpPage, "");
+    gh: function(args, kwargs) {
+        // Usage: >gh (got to github)
+        // Usage: >gh <searchterm>
+        let searchBase = "https://www.github.com/"
+        let searchterm = "";
+        
+        // Check for flags
+        if (kwargs.h) return helpConsole.log("Usage: gh [<searchterm>]")
+
+        if (args.length > 0) {
+            searchBase += "search?q=";
+            searchterm = encodeUrl(args.join(" "));
+        }
+
+        const searchUrl = searchBase + searchterm;
+        runSearchEvent(searchUrl, "");
+    },
+    help: function(args, kwargs) {
+        const helpPage = "https://www.github.com/Liamvdv/liamvdv.github.io";
+
+        let goTo = "#quick-start"
+        if (args.length > 0) {
+            if (args.length == 1) goTo = "/blob/master/docs/cli.md#" + args[0];
+            else return helpConsole.log("Usage: > help [<command>]");
+        }
+        const searchUrl = helpPage + goTo;  
+        runSearchEvent(searchUrl, "");
     }
 }
 
@@ -111,4 +171,8 @@ function decomposeCommand(str) {
         if (priorKwargFlag) kwargs[priorKwarg] = true; // if last argument was flag
     }
     return [command, args, kwargs];
+}
+
+function encodeUrl(str) {
+    return encodeURIComponent(str);
 }
