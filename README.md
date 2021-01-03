@@ -45,6 +45,7 @@ Currently supported commands:
 - [help](docs/cli.md#help)
 - [amz](docs/cli.md#amz)
 - [so](docs/cli.md#so)
+- [gh](docs/cli.md#gh)
 - [l](docs/cli.md#l)
 
 ### Shortcuts

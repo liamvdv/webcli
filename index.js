@@ -68,6 +68,10 @@ const localConfig = {
     }
 }
 
+const gState = {
+    helpPageActive: false
+}
+
 localConfig.init()
 
 document.addEventListener("DOMContentLoaded", function(e) {
@@ -85,19 +89,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
 // Shortcuts logic
 document.addEventListener("keydown", function (event) {
-    if      (event.altKey && event.shiftKey)        rotateWt(wts, 1);
-    else if (event.altKey && !isNaN(event.key))     changeWt(wts, parseInt(event.key));
-    else if (document.activeElement === cli.el && event.key === "ArrowUp")  cli.showPriorCommand();
-    else if (document.activeElement === cli.el && event.key === "ArrowDown")cli.showNextCommand();
+    if      (event.altKey && event.shiftKey)        rotateWt(1);
+    else if (event.altKey && !isNaN(event.key))     changeWt(parseInt(event.key));
+    else if (event.altKey && event.ctrlKey && !gState.helpPageActive) {
+        event.preventDefault();
+        renderHelpPage();
+    }
+    else if (document.activeElement === cli.el && event.key === "ArrowUp")  cli.showPriorCommand(event);
+    else if (document.activeElement === cli.el && event.key === "ArrowDown")cli.showNextCommand(event);
 });
-
-
-
-
-/* A webtop is build form the local config.
- * the configuration is split by the possible webtops.
- * These Webtops have objects of widgets as their values or false it the wt is deactivated 
- * Thes widgets have names and their value is an obejct describing it or null if the
- * widget is not wanted.
- * 
- */

@@ -114,6 +114,65 @@ const defaultConfig = { // the ids of the webtops map to their storage model
     }
 }
 
+const HELPPAGEHTML = {
+    Widgets: "<h4>Coming soon</h4>",
+    Shortcuts: `
+        <h4>General</h4>
+        <table>
+            <tr>
+                <td class="alined-td">ALT + SHIFT</td>
+                <td>Rotate Webtop</td>
+            </tr>
+            <tr>
+                <td class="alined-td">ALT + DIGIT</td>
+                <td>Go to Webtop</td>
+            </tr>
+            <tr>
+                <td class="alined-td">ALT + CTRL</td>
+                <td>Quick help</td>
+            </tr>
+        </table>
+
+        <h4>CLI</h4>
+        <table>
+            <tr>
+                <td class="alined-td">ArrowUp</td>
+                <td>Prior command</td>
+            </tr>
+            <tr>
+                <td class="alined-td">ArrowDown</td>
+                <td>Next command</td>
+            </tr>
+        </table>
+    `,
+    Commands: `
+        <p class="cmd">help [&lt;command&gt;]</p>
+        <p class="tab">open the documentation [for command]</p>
+
+        <p class="cmd"> gh [&lt;searchterm&gt;]</p>
+        <p class="tab">open github [and search]</p>
+
+        <p class="cmd"> so [&lt;searchterm&gt;]</p>
+        <p class="tab">open stackoverflow [and search]</p>
+        
+        <p class="cmd"> l [&lt;port&gt;]</p>
+        <p class="tab">open 127.0.0.1 on specified port</p>
+
+        <p class="cmd"> amz [&lt;searchterm&gt; [-s sortoption] ]</p>
+        <p class="tab">
+            open amazon [and search]<br>
+            sort options:
+        </p>
+        <p class="tab2">
+            <span class="option-color">rev</span> : by review<br>
+            <span class="option-color">asc</span> : price ascending<br>
+            <span class="option-color">desc</span> : price descending<br>
+            <span class="option-color">new</span> : new in stock
+        </p>
+    ` // better do the options in a table?
+}
+
+
 function get(key) {
     const serialisedValue = localStorage.getItem(key);
     if (serialisedValue) return JSON.parse(serialisedValue);
@@ -155,3 +214,5 @@ function changeSearchEngine(wtId, engineUrl) {
 
     render(wts[wtId]);
 }
+
+

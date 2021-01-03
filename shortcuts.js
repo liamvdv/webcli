@@ -1,17 +1,16 @@
 /* + + + Shortcuts + + + */
 // Fire with Alt + Shift
-function rotateWt(wts, by=1) {
+function rotateWt(by=1) {
     let wtNum = parseInt(wts.current.id.slice(-1)); // only works for wts.length <= 10
     let to = (wtNum + by) % wts.length;
     wts.changeCurrent(to);
 }
 
 // Fire with Alt + <NUM>
-function changeWt(wts, to=1) {
-    if (to >= wts.length) helpConsole.log(`<changeWebtop> ${to} is higher than the number of Webtops you have.`);
+function changeWt(to=1) {
+    if (to == 0 || to > wts.length) helpConsole.log(`<changeWebtop> ${to} is higher than the number of Webtops you have.`);
     else wts.changeCurrent(to - 1);
 }
-
 
 /* + + + Cli + + + */
 const cli = {
@@ -21,7 +20,7 @@ const cli = {
         this.historyCursor = this.history.length;
 
         if (this.history.length === 0) {
-            helpConsole.log('Hey you look smart! Type ">help" to also be effective.', 10000);
+            helpConsole.log('Hey you look smart! Type ">help" or press CTRL + ALT to also be effective.', 10000);
         }
     },
     run: function (inputString) {
@@ -51,20 +50,21 @@ const cli = {
     },
     addToHistory: function(exp) {
         this.history.push(exp);
-        console.log(this.history);
         if (this.history.length > 10) {
             while(this.history.length > 10) this.history.shift();
         }
         set("cliHistory", this.history);
     },
-    showPriorCommand: function() {
+    showPriorCommand: function(e) {
+        e.preventDefault();
         if (this.historyCursor == 0) return helpConsole.log("Reached history end.");
 
         this.historyCursor--;
         const exp = this.history[this.historyCursor];
         this.el.value = ">" + exp;
     },
-    showNextCommand: function () {
+    showNextCommand: function (e) {
+        e.preventDefault();
         if (this.historyCursor == this.history.length-1) return helpConsole.log("Reached history start.");
 
         this.historyCursor++;
@@ -76,7 +76,7 @@ const cli = {
     }
 }
 
-
+// What if we make all these commands a object which a helppage and exec attribute?
 const commandRegistry = {
     l: function (args, kwargs){
         let url = "http://127.0.0.1:" + args[0]; //port

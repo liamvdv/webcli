@@ -104,9 +104,6 @@ function createQuitEditListener(formEl) { // helper for multiple
 }
 
 function renderEditFormFor(widgetName) { // helper for createEditMenuEl
-    /* if (widgetName === "iconGrid") renderIconEditForm();
-    else if (widgetName === "search") renderSearchEditForm();
-    else console.log(`renderEditFormFor ${widgetName} not implemented yet.`); */
     const func = widgetRegistry[widgetName].edit
     return func()
 }
@@ -127,8 +124,7 @@ function createEditMenuEl(wtConfig) {
         `.trim();
     });
     div.innerHTML += `<p>\
-        ALT + DIGIT Change Webtop to <br>
-        ALT + SHIFT Rotate Webtop <br>
+        Hold CTRL + ALT for some tips.  
     </p>`
     return div;
 }
@@ -245,6 +241,41 @@ function renderSearchEditForm(wt=null, positioning=defaultEditElPositioning) {
     wt.appendChild(formEl);
 
     createSearchEditFormListeners(formEl);
+}
+
+// For Overview overlay
+
+function createHelpPage() {
+    const overlay = create("div", {class: "opaque-overlay"});
+
+    // gather the information about the shortcuts here and make them elems
+    ["Shortcuts", "Commands", "Widgets"].forEach(name => {
+        const section = create("section", {class: "info"})
+        let innerHTML = `
+            <h2>${name}</h2>
+            <hr>
+            ${HELPPAGEHTML[name]}
+        `;
+        section.innerHTML = innerHTML;
+        overlay.appendChild(section);
+    })
+    return overlay
+}
+
+function renderHelpPage() {
+    let el = getEl(".opaque-overlay");
+    if (el === null) el = createHelpPage();
+
+    const html = getEl("html");
+    html.appendChild(el);
+
+    gState.helpPageActive = true;
+
+    document.addEventListener("keyup", (e) => {
+        el.remove();
+        gState.helpPageActive = false;
+        
+    }, {once: true});
 }
 
 

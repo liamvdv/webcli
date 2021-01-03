@@ -42,3 +42,4 @@ function removeWeatherWidget(wtId, )
     removeWidget(wt, name, other_identifier=null) // set equal to null in local config and render
 
 */
+
