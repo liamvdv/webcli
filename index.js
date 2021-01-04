@@ -84,17 +84,19 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
     const editBtn = getEl("#edit-config");
     editBtn.addEventListener("click", e => renderEditMenu());
+    
+    // Shortcuts logic
+    document.addEventListener("keydown", function (event) {
+        if      (event.altKey && event.shiftKey)        rotateWt(1);
+        else if (event.altKey && !isNaN(event.key))     changeWt(parseInt(event.key));
+        else if (event.altKey && event.ctrlKey && !gState.helpPageActive) {
+            event.preventDefault();
+            renderHelpPage();
+        }
+        // else if (document.activeElement === cli.el && event.key === ">" && cli.el.value.trim() === ">") cli.fullFocus();
+        else if (document.activeElement === cli.el && event.key === "ArrowUp")  cli.showPriorCommand(event);
+        else if (document.activeElement === cli.el && event.key === "ArrowDown")cli.showNextCommand(event);
+    });
 });
 
 
-// Shortcuts logic
-document.addEventListener("keydown", function (event) {
-    if      (event.altKey && event.shiftKey)        rotateWt(1);
-    else if (event.altKey && !isNaN(event.key))     changeWt(parseInt(event.key));
-    else if (event.altKey && event.ctrlKey && !gState.helpPageActive) {
-        event.preventDefault();
-        renderHelpPage();
-    }
-    else if (document.activeElement === cli.el && event.key === "ArrowUp")  cli.showPriorCommand(event);
-    else if (document.activeElement === cli.el && event.key === "ArrowDown")cli.showNextCommand(event);
-});
