@@ -34,27 +34,45 @@ const cli = {
         this.addToHistory(str);
         let pipeStorage;
 
-        const commandExpressions = str.split("|");
+        const commandExpressions = str.split(/\s*\|\s*/);
 
         let command, args, kwargs; 
         commandExpressions.forEach(commandStr => {
             try {
-                [command, args, kwargs] = decomposeCommand(commandStr.trim());
+                [command, args, kwargs] = decomposeCommand(commandStr);
+
+                args.forEach((arg, idx) => {
+                    if (arg.startsWith("$")) {
+                        const key = arg.slice(1);
+                        args[idx] = commandRegistry["get"]([key], {toBePiped: true});
+                    }
+                });
+
                 if (pipeStorage !== undefined) kwargs["piped"] = pipeStorage;
                 
                 commandFunc = commandRegistry[command];
                 if (commandFunc) {
+                    console.log(`Running ${commandFunc}`);
                     pipeStorage = commandFunc(args, kwargs);
                 } else {
                     this.clear()
                     throw new CommandNotFoundError(`${command} unkown. Type >help or hold CTRL + ALT for help.`)
                 }
             } catch (err) {
-                if (err instanceof CommandSyntaxError) {
-                    return helpConsole.log(err.name + ": " + err.message);
-                } else if (err instanceof CommandNotFoundError) {
-                    return helpConsole.log(err.name + ": " + err.message);
-                } else throw err;
+                //Maybe customise behaviour depending on what error was raised
+                if (err instanceof CommandSyntaxError ||
+                    err instanceof CommandNotFoundError ||
+                    err instanceof ArgumentError ||
+                    err instanceof KeywordArgumentError) {
+                        helpConsole.log(err.name + ": " + err.message, 10000);
+                } else if (err instanceof InternalCommandError) {
+                    helpConsole.log(`An internal error inside the command occured: ${err.msg}`);
+                } else {
+                    helpConsole.log("An unexpected Error occured. Type >feedback to report this issue, thank you.")
+                    throw err;
+                }
+            } finally {
+                this.clear();
             }
         });
     },
@@ -147,32 +165,90 @@ const commandRegistry = {
         let goTo = "#quick-start"
         if (args.length > 0) {
             if (args.length == 1) goTo = "/blob/master/docs/cli.md#" + args[0];
-            else return helpConsole.log("Usage: > help [<command>]");
+            else return helpConsole.log("Usage: >help [<command>]");
         }
         const searchUrl = helpPage + goTo;  
         runSearchEvent(searchUrl, "");
+    },
+    set: function (args, kwargs) {
+        if (args.length < 2) throw new ArgumentError("Expects at least two arguments. Usage: >set <KEY> <VALUE>");
+        const STORAGE_KEY = "cli-global-vars";
+
+        const key = args[0];
+        const value = args.slice(1).join(" ");
+        let store = get(STORAGE_KEY);
+        if (store !== null) {
+            store[key] = value;
+            set(STORAGE_KEY, store);
+        } else {
+            store = { key: value }
+            set(STORAGE_KEY, store);
+        }
+        helpConsole.log("Done.");
+    },
+    get: function (args, kwargs) {
+        if (args.length !== 1) throw new ArgumentError("Expects only one argument. Usage: >get <KEY>");
+        const STORAGE_KEY = "cli-global-vars";
+
+        const key = args[0];
+        let store = get(STORAGE_KEY);
+
+        if (store === null || store[key] === undefined) {
+            if (kwargs.toBePiped) {
+                throw new InternalCommandError(`Key ${key} is undefined.`);
+            } else {
+                helpConsole.log(`${key} is undefined. Use >set <KEY> <VALUE> to set a new variable.`);
+                return undefined;
+            }
+        } else {
+            helpConsole.log(`${key} = ${store[key]}`);
+            return store[key];
+        }
+    },
+    feedback: function () {
+        const searchUrl = "https://github.com/Liamvdv/liamvdv.github.io/issues/new";
+        runSearchEvent(searchUrl, "");
     }
 }
-/* Programm that lets the user set global variables what he can always access */
 
 class CommandSyntaxError extends Error {
     constructor(msg) {
         super(msg);
-        this.name = "SyntaxError"
+        this.name = "CommandSyntaxError"
     }
 }
 
 class CommandNotFoundError extends Error {
     constructor(msg) {
         super(msg);
-        this.name ="CommandNotFoundError"
+        this.name = "CommandNotFoundError"
+    }
+}
+
+class ArgumentError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "ArgumentError";
+    }
+}
+
+class KeywordArgumentError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "KeywordArgumentError";
+    }
+}
+class InternalCommandError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "InternalCommandError";
     }
 }
 
 function decomposeCommand(expression) {
     let cmd;
     let args = [];
-    let kwargs = [];
+    let kwargs = {};
     
     let state = {
         priorKw: "",
@@ -246,7 +322,10 @@ function decomposeCommand(expression) {
                 state.addArgBasedOnState(state.longStrBuffer);
                 state.resetStrBuffer();
             } else {
-                throw new CommandSyntaxError(`No opening quote / Expects a space before quote.`);
+                if (str.includes(`"`) || str.includes(`'`)) {
+                    state.addArgBasedOnState(str); // no shortening if passed as argument to sth="abc"
+                }
+                else throw new CommandSyntaxError(`No opening quote / Expects a space before quote.`);
             }
         } else if (state.longStrFlag) {     // whatever is in the quotes, needs to be checked before checking for hythons
             state.addToBuffer(str);
