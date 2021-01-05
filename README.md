@@ -8,11 +8,8 @@ quickly navigate them with [Shortcuts](#Shortcuts) and it's custom [CLI](#CLI).
 Your Webtops have three unique features: [Shortcuts](docs/shortcuts.md), the [CLI](docs/cli.md) and [Widgets](docs/widgets.md). The special part: The ready-made ones are fully customisable and you can add your own widgets and commands.
 The following gives you a quick overview of how to get started with your own Webtop.
 
-The two most important shortcuts are the following, which allow you to change between your Webtops. 
-```
-ALT + SHIFT # rotate to the next Webtop
-ALT + DIGIT # go to Webtop 1 or 2 or 3
-```
+Hold `CTRL + ALT` to access the help page.
+Rotate to the next Webtop with `ALT + SHIFT` or jump directly to one by pressing `ALT + DIGIT`.
 
 The CLI gets activated by typing ">" into the searchbar.
 From there on you have access to a range of commands. Here are some examples:
@@ -39,14 +36,18 @@ If your are like me and open your browser frequently, you really come to appreci
 In Firefox: type __about:preferences#home__ > Page > dropdown select user-defined address > type https://liamvdv.github.io > close Firefox > reopen and enjoy!
 
 ### CLI
-Add your custom commands by cloning this project and just adding a function. More on that in future documentation.
+Add your custom commands by cloning this project and just adding a function.
 Currently supported commands:
 
 - [help](docs/cli.md#help)
-- [amz](docs/cli.md#amz)
-- [so](docs/cli.md#so)
-- [gh](docs/cli.md#gh)
+- [set](docs/cli.md#set)
+- [get](docs/cli.md#get)
 - [l](docs/cli.md#l)
+- [gh](docs/cli.md#gh)
+- [so](docs/cli.md#so)
+- [amz](docs/cli.md#amz)
+- [feedback](docs/cli.md#feedback)
+
 
 ### Shortcuts
 Navigate the web without touching your mouse once. [Learn more](docs/shortcuts.md)
@@ -55,5 +56,5 @@ Navigate the web without touching your mouse once. [Learn more](docs/shortcuts.m
 Coming soon with full power!
 
 
-### Notes
+#### Notes
 This project is still a prototype and is missing some core functionality. Shadows only work properly on Firefox. If you have any thoughts please let me know. 
