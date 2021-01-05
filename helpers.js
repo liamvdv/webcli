@@ -201,6 +201,12 @@ function getConfig() {
 
 function addIcon(wtId, name, targetUrl, imgUrl) {
     let iconGridData = localConfig.get("iconGrid", wtId);
+
+    if (imgUrl.trim() === "") {
+        const url = new URL(targetUrl);
+        const baseUrl = url.protocol + "//" + url.hostname + "/";
+        imgUrl = baseUrl + "apple-touch-icon.png"; // better fallback would be "favicon.ico", but worse img quality
+    }
     iconGridData.icons.push([name, targetUrl, imgUrl]);
     localConfig.set("iconGrid", iconGridData, wts[wtId]);
 
