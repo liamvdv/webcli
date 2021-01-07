@@ -68,7 +68,10 @@ const localConfig = {
     }
 }
 
-const gState = {
+var g = {
+    config: {
+        cliEnvVarKey: "cli-environment-key"
+    },
     helpPageActive: false
 }
 
@@ -80,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
     wts.init();
     wts.changeCurrent(0);
 
-    cli.init();
+    cli.domInit();
 
     const editBtn = getEl("#edit-config");
     editBtn.addEventListener("click", e => renderEditMenu());
@@ -93,9 +96,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
             event.preventDefault();
             renderHelpPage();
         }
-        // else if (document.activeElement === cli.el && event.key === ">" && cli.el.value.trim() === ">") cli.fullFocus();
-        else if (document.activeElement === cli.el && event.key === "ArrowUp")  cli.showPriorCommand(event);
-        else if (document.activeElement === cli.el && event.key === "ArrowDown")cli.showNextCommand(event);
+        else if (document.activeElement === cli.el && cli.isActive() && event.key === "Tab")cli.cycleKwargs(event);
+        else if (document.activeElement === cli.el && event.key === "ArrowUp")              cli.showPriorCommand(event);
+        else if (document.activeElement === cli.el && event.key === "ArrowDown")            cli.showNextCommand(event);
     });
 });
 

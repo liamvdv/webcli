@@ -48,6 +48,9 @@ function runClickEvent(elem) {
     elem.dispatchEvent(event);
 }
 
+function encodeUrl(str) {
+    return encodeURIComponent(str);
+}
 
 /* Config */
 const searchEngines = {
