@@ -278,9 +278,9 @@ function renderHelpPage() {
     }, {once: true});
 }
 
-
-
 // weather
 function renderWeatherEditForm() {
     helpConsole.log("Not implemented yet.", 2000);
 }
+
+

@@ -188,7 +188,7 @@ class Get extends Command{
     static name = "get";
     static allowedArgs = ["KEY"];
     static allowedKwargs = {};
-    static allowedFlags = ["a", "toBePiped"];
+    static allowedFlags = ["toBePiped"];
 
     constructor(args, kwargs, flags) {
         super(args, kwargs, flags);
@@ -208,7 +208,6 @@ class Get extends Command{
             }
         } else {
             if (this.hasFlag("toBePiped")) this.result = store[key];
-            else if (this.hasFlag("a")) helpConsole.log(store);
             else helpConsole.log(`${key} = ${store[key]}`);
         }
     }
@@ -387,7 +386,6 @@ var commandRegistry = new CommandRegistry(
 
 /* CLI object */
 class CLI {
-
     constructor() {
         this.config = {
             historyKey: "cliHistory"
@@ -434,16 +432,23 @@ class CLI {
         this.addToHistory(exp);
 
         const expressions = exp.split(/\s*\|\s*/);
-        const multipleFlag = expressions.length > 1; 
+        const multipleFlag = expressions.length > 1; let pipeCache;
 
         let cmd, args, kwargs, flags; 
-        expressions.forEach(cmdExp => {
+        expressions.forEach((cmdExp, n) => {
             try {
                 [cmd, args, kwargs, flags] = decomposeCommand(cmdExp);
-            
+
+                if (multipleFlag) { // TODO: create unifrom interface for result data
+                    if (n === 0) flags.push("toBePiped");
+                    else if (n === expressions.length-1) { flags.push("piped"); args.push(...pipeCache); }
+                    else { flags.push("piped", "toBePiped"); args.push(...pipeCache); }
+                }    
+
                 const exe = commandRegistry.get(cmd);
                 const exec = new exe(args, kwargs, flags);
-                // exec.result
+
+                if (multipleFlag) pipeCache = exec.result;
 
             } catch (err) {
                 if (err instanceof SyntaxError ||
@@ -507,6 +512,10 @@ class CLI {
         return this.el.value.startsWith(">");
     }
 
+    isFocused() {
+        return this.el === document.activeElement;
+    }
+
     cycleKwargs(e) {
         const fromLast = (cmdCls, kw) => {
             if (kw.startsWith("-")) {
@@ -519,10 +528,10 @@ class CLI {
                     this.value += ` ${kwArg}`;
 
                 } else if (cmdCls.hasFlag(opt)) {
-                    console.log(`${cmdCls.name}'s option -"${opt}" is a flag, not a keyword.`);
+                    helpConsole.log(`${cmdCls.name}'s option -"${opt}" is a flag, not a keyword.`);
     
                 } else {
-                    console.log(`${cmdCls.name} doesn't have an option -"${opt}".`)
+                    helpConsole.log(`${cmdCls.name} doesn't have an option -"${opt}".`)
                 }
             }
         };
@@ -543,8 +552,6 @@ class CLI {
                     } else { // by cursor
                         this.temp.kwargCursor = (this.temp.kwargCursor +1) % cmdCls.allowedKwargs[opt].length;
                         const kwArg = cmdCls.allowedKwargs[opt][this.temp.kwargCursor];
-                        console.log(options);
-                        console.log(options.slice(0, options.length-1));
                         this.value = `${cmdCls.name} ${options.slice(0, options.length-1).join(" ")} ${kwArg}`;
                     }
                 }
@@ -554,19 +561,18 @@ class CLI {
         e.preventDefault(); // Tab
 
         let [cmd, ...options] = this.value.split(/\s+/);
-        console.log(options);
         let exe;
         try {
             exe = commandRegistry.get(cmd); 
         } catch (err) {
             console.log(err);
         }
+
         //TODO: looks at last 2 -> MISSBEHAVES FOR QUOTES
         if (options.length === 0) return;
         else if (options.length === 1) fromLast(exe, options[0]);
         else { // length longer equal 2
             const [ndLast, stLast] = options.slice(options.length -2);
-            console.log("SLICE RETURNS", options);
 
             if (stLast.startsWith("-")) fromLast(exe, stLast);
             else if (ndLast.startsWith("-")) fromSecondLast(exe, ndLast, stLast);
@@ -574,9 +580,6 @@ class CLI {
         } 
     }
 }
-
-var cli = new CLI();
-
 
 
 function decomposeCommand(expression) {

@@ -13,3 +13,77 @@ function changeWt(to=1) {
 }
 
 
+class HelpConsole {
+
+    get value() {
+        return this.el.value;
+    }
+    set value(v) {
+        this.el.value = v;
+    }
+
+    constructor() {
+        // config?
+    }
+
+    domInit() {
+        this.el = getEl("#helpConsole");
+    }
+
+    log(msg, timeMs=5000) {
+        this.value = msg;
+        setTimeout(() => {
+            if (this.value === msg) this.clear();
+        }, timeMs)
+    }
+
+    clear() {
+        this.value = "";
+    }
+}
+
+class LocalConfig {
+    constructor() {
+        this.data = getConfig();
+    }
+
+    get(widgetName, wtId=null) {
+        if (!wtId) wtId = wts.current.id;
+
+        if (widgetName === "all") return this.data[wtId];
+        else return this.data[wtId][widgetName];
+    }
+
+    set(widgetName, value, wt=null) {
+        if (!wt) wt = wts.current;
+        this.data[wt.id][widgetName] = value;
+        setConfig(this.data);
+    }
+
+    reset() {
+        this.data = setConfig(defaultConfig);
+    }
+}
+
+class WTS {  //el references, wt0, wt1, wt2,...
+    constructor() {
+        //config?
+    }
+
+    domInit() {
+        let wts = getEls(".wt");
+        wts.forEach(wt => {
+            this[wt.id] = wt;
+        });
+        this.current = wts[0];
+        this.length = wts.length;
+    }
+
+    changeCurrent(toIdx) {
+        if (this.current) this.current.classList.remove("current-wt");
+
+        this.current = this["wt" + toIdx];
+        this.current.classList.add("current-wt");
+        render(this.current, localConfig.get("all", this.current.id));
+    }
+}

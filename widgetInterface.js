@@ -32,8 +32,6 @@ function addWeatherWidget(wtId, name, ...args) {
     render(wts[wtId]);
 }
 
-function removeWeatherWidget(wtId, )
-
 /* helpers
     createWidget(...anyArgs) // create the widget elem itself, gets called in renderWidget
     renderWidget(wt, name) // get widget config from localConfig.get(name, wt) and then call render
@@ -43,3 +41,64 @@ function removeWeatherWidget(wtId, )
 
 */
 
+class WidgetRegistry {
+    constructor(...widgetClasses) {
+        this.widgets = (widgetClasses) => {
+            let widgets = {}
+            for (const cls of widgetClasses) {
+                widgets[cls.name] = cls;
+            }
+            return widgets;
+        }
+    }
+}
+
+
+class Widget {
+    constructor(widgetConfig = {
+        positioning: [1, 1, 12, 12]
+    }) {
+        this.wt = wts.current;
+        this.el = this.create()
+    }
+
+    render() {
+        ;
+    }
+    
+    isActive() {
+        return true;
+    }
+
+    isFocused() {
+        return document.activeElement === this.el;
+    }
+}
+
+class Icon extends Widget {
+    static name = "icon"
+
+    constructor(iconConfig={
+        positioning: [1, 2, 3, 4],
+        name: "unknownIcon",
+        targetUrl: "",
+        imgSrc: ""
+    }) {
+        super(iconConfig);
+    }
+
+    createElement() {
+
+    }
+    createListeners() {
+
+    }
+
+    render() {
+
+    }
+}
+
+var widgetRegistry = new WidgetRegistry(
+
+)
