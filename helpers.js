@@ -48,6 +48,13 @@ function runClickEvent(elem) {
     elem.dispatchEvent(event);
 }
 
+function createQuitEditListener(formEl) { // helper for multiple
+    getSubEl(formEl, ".quit-edit").addEventListener("click", function (event) {
+        event.preventDefault();
+        formEl.remove();
+    });
+}
+
 function encodeUrl(str) {
     return encodeURIComponent(str);
 }
@@ -213,7 +220,7 @@ function addIcon(wtId, name, targetUrl, imgUrl) {
     iconGridData.icons.push([name, targetUrl, imgUrl]);
     localConfig.set("iconGrid", iconGridData, wts[wtId]);
 
-    render(wts[wtId]);
+    widgetManager.render(wts[wtId]);
 }
 
 function changeSearchEngine(wtId, engineUrl) {
@@ -221,7 +228,7 @@ function changeSearchEngine(wtId, engineUrl) {
     searchData.engineBaseUrl = engineUrl;
     localConfig.set("search", searchData);
 
-    render(wts[wtId]);
+    widgetManager.render(wts[wtId]);
 }
 
 

@@ -84,6 +84,7 @@ class WTS {  //el references, wt0, wt1, wt2,...
 
         this.current = this["wt" + toIdx];
         this.current.classList.add("current-wt");
-        render(this.current, localConfig.get("all", this.current.id));
+        
+        widgetManager.render();
     }
 }

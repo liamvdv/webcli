@@ -229,13 +229,13 @@ class Set extends Command{
 
         const key = args[0];
         const value = args.slice(1).join(" ");
-        let store = get(STORAGE_KEY); //TODO problem with function name and command name, how to namespace cmd names?
-        console.log(key, value);
+        let store = get(STORAGE_KEY);   
         if (store !== null) {
             store[key] = value;
             set(STORAGE_KEY, store);
         } else {
-            store = { key: value }
+            store = {}
+            store[key] = value;
             set(STORAGE_KEY, store);
         }
         helpConsole.log("Done.");
@@ -397,12 +397,18 @@ class CLI {
 
     domInit() {
         this.el = getEl(".searchbar");
+        this.el.addEventListener("input", (e) => {
+            
+        })
     }
 
     initHistory() {
-        const history = get(this.config.historyKey);
-        if (history === null) set(this.config.historyKey, []);
-        else return history;
+        let history = get(this.config.historyKey);
+        if (history === null) {
+            history = [];
+            set(this.config.historyKey, history);
+        }
+        return history;
     }
     
     get rawValue() {
@@ -542,6 +548,10 @@ class CLI {
                 if (cmdCls.allowedKwargs[opt] === true) return;  // all args allowd to kw, too many possibilities
                 else {
                     if (this.temp.kwargCursor === undefined) { // from halfArgString
+                        // const idx = cmdCls.allowedKwargs[opt].findindex((item, idx) => {return item.startsWith(halArg)});
+                        // if (idx === -1) return;
+                        // else this.temp.kwargsCursor = idx;
+                        // this.value = `${cmd} ${options.slice(0, options.length-1).join(" ")} ${cmdCls.allowedKwargs[opt][idx]}`;
                         for (const [idx, allowedArg] of cmdCls.allowedKwargs[opt].entries()) {
                             if (allowedArg.startsWith(halfArg)) {
                                 this.temp.kwargCursor = idx;

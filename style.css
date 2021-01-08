@@ -18,6 +18,7 @@
     font-family: Roboto, sans-serif;
     font-size: 16px;
     font-weight: 400;
+    outline: none;
 }
 
 a {
@@ -93,7 +94,8 @@ footer textarea {
     height: minmax(auto, 100%);
 }
 
-.icon:hover {
+.icon:hover,
+.icon:focus {
     box-shadow: var(--box-shadow-hover);
 }
 
@@ -108,13 +110,15 @@ footer textarea {
     width: 80%;
     border: 1px solid #ada9a9;
     border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
     padding: 1rem;
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
-.searchbar:hover {
-    box-shadow: var(--box-shadow-hover);
+.searchbar:hover,
+.searchbar:focus {
+    box-shadow: 0 1px 10px rgba(32, 33, 36, 0.5);
+    border: none;
+    outline: none !important;
 }
 
 
