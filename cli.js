@@ -365,6 +365,84 @@ class Amz extends Command{
     }
 }
 
+class Run extends Command {
+    static name = "run";
+    static allowedArgs = ["srcFile/srcString", "args"]
+    static allowedKwargs = {
+        lang: [          
+            "awk",
+            "bash",
+            "c",
+            "cpp",
+            "csharp",
+            "deno",
+            "elixir",
+            "emacs",
+            "go",
+            "haskell",
+            "java",
+            "jelly",
+            "julia",
+            "kotlin",
+            "nasm",
+            "node",
+            "perl",
+            "php",
+            "python2",
+            "python3",
+            "paradoc",
+            "ruby",
+            "rust",
+            "swift",
+            "typescript"
+        ]
+    }
+    static allowedFlags = [];
+
+    constructor (args, kwargs, flags){
+        super(args, kwargs, flags);
+    }
+
+    mkReq(lang, src, args) {
+        const payload = {
+            "language": lang,
+            "source": src,
+            "args": args
+        };
+
+        fetch("https://emkc.org/api/v1/piston/execute", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(res => res.json())
+            .then(json => {
+                if (json.ran !== true) helpConsole.log(`Error occured: ${json.message}`);
+                else {
+                    helpConsole.log(json.output);
+                } 
+            });
+    }
+
+    main(args, kwargs, flags) {
+        const src = args[0];
+        const argArr = args[1].split(/\s+/g);
+        let lang;
+        if (this.hasKwarg("lang")) lang = kwargs.lang;
+        this.mkReq(lang, src, argArr);
+    }
+}
+
+function fetcher() {
+    fetch("https://emkc.org/api/v1/piston/versions")
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+        })
+}
 
 /* 
 Register all commands here be passing their classes as arguments to the constructor.
@@ -378,7 +456,8 @@ var commandRegistry = new CommandRegistry(
     L,
     Gh,
     So,
-    Amz
+    Amz 
+    // Run CORS Problem.
 );
 
 
