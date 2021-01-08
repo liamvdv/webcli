@@ -8,37 +8,38 @@ The default search engine is Google.
 
 # ... on steriods
 This searchbar turns into everything you want as soon as you type > (greater than sign).
-Below you will see some preimplemented commands. If you are missing one, just create your own function for it. See [here](#Custom-Commands)
+Below you will see some preimplemented commands. If you are missing one, go [here](#Custom-Commands) to learn how to implement your own!
 Usage: 
 ```
-> <command> [<args> <flags> <kwargFlag> <kwarg>]
+> <command> <args> [<flags>] [<kw> <kwArg>]
 ```
 You can even go through your last command history with ArrowUp and ArrowDown, just like in the real commandline. The last 10 commands are stored.  
-Arguments to a command must be provided. Flags and keyword-arguments can modify the commands behaviour.
-Arguments are always space seperated. If a command expects multiple words as one argument, put these words in quotes ("" or '') and they will be parsed as one argument.
+Arguments to a command must be provided. Flags and keyword-arguments can modify the commands behaviour. A keyword only takes one argument.
 
-You may access custom environment variables by prefixing them with the dollar sign ($).
+Arguments are always space separated. If a command or keyword expects multiple words as one argument, put these words in quotes `"" or ''` and they will be parsed as one argument.
+
+You may access custom environment variables by prefixing them with the dollar sign `$<name>`.
 Example:
 ```
->set WISHLIST Brooks Ghost 13 running shoes men
+>set WISHLIST "Brooks Ghost 13 running shoes men"
 >amz $WISHLIST -s asc
 ```
-Where we set the key "WISHLIST" equal to "Brooks Ghost 13 running shoes men" with [set](#set).
-Then we run the [amz](#amz) command to search Amazon by ascending prices after "Brooks Ghost 13 running shoes men". 
+Where we set the key `WISHLIST` equal to `"Brooks Ghost 13 running shoes men"` with [set](#set).
+Then we run the [amz](#amz) command to search Amazon for the shoes and filter by ascending prices. 
 
 ## help
 Get to the documentation page of a command.
 Usage: 
 ```
-> help <command>
+>help <command>
 ```
 ## set
 Set environment variables just like in the real terminal.
 Usage:
 ```
->set <KEY> <VALUES...>
+>set <KEY> <VALUE>
 ```
-Note: Keys must not include spaces. The value will be one or more words. You can optionally put them in quotes.
+Note: Keys must not include spaces. If the value is one word no quotes are required, else you must provide quotes.
 
 ## get
 Get your custom set environment variables.
@@ -51,28 +52,29 @@ The dollar sign syntax is very handy for long repeating (keyword-) arguments to 
 
 ## l
 Quickly get to your test server running on localhost (127.0.0.1).
+Usage:
 ```
-> l <port>
+>l <port>
 ```  
 
 ## gh
 Open and search GitHub directly from your CLI.
 ```
-> gh [<searchterm>]
+>gh [<searchterm>]
 ```
 The __gh__ command supports the _h_ flag to get some knowledge on how to use it from the [helpConsole](widgets.md#helpConsole). 
 
 ## so
 Search StackOverflow directly from your Webtop.
 ```
-> so <question>
+>so <question>
 ```
 Does not currently support any other flags or kwargs. 
 
 ## amz
 Search Amazon directly from your Webtop.
 ```
-> amz <searchterm>
+>amz <searchterm> [options]
 ```
 The _amz_ command supports the sorted by kwarg. Four types are supported:
 - asc (ascending price)
@@ -89,74 +91,112 @@ A quick way to open a new issue on GitHub. Please use it you are
 - experiencing unexpected behaviour
 - asked to report an uncaught error by the software
 - a genius and have a great idea or need for a feature
-A minute of your time helps this project progress by hours. 
+A minute of your time helps this project progress by hours. Thank you.
 
 ## Custom commands
 You've read corrently! You can make your own commands and host them on your own GitHub pages or make a pull request.
-Commands are basically functions that have a name, take in an array of arguments and an object called kwargs, short for keyword-arguments. They are all registered in the [commandRegistry object](shortcuts.js).
-Arguments following a command will be split on space and added to the args array. 
-Flags can be given after the arguments and take no further argument.
+Commands are basically Classes that have a name, take in an array of arguments, an array of flags and an object called kwargs, short for keyword-arguments. They are all registered in the [commandRegistry object](cli.js).
+Arguments following a command will be split on space and added to the args array. They must be provided.
 ```
-> gh -h
-``` 
-h is the help flag for the [GitHub](#gh) command. The gh function will execute the following:
-```javascript
-// args = [], kwargs = { h: true }
-gh: function(args, kwargs) {
-    // ...
-    if (kwarg.h) return helpConsole.log("Usage: > gh [<searchterm>]");
-    // ...
-}
+>commmand arg1 arg2 arg3 ...
+>help <command>
+>help amz   # go the the amz documentation
 ```
-Learn more about the **helpConsole** [here](widgets.md#helpConsole).
-Keyword-arguments are like flags, but followd by one argument belonging to it. 
+Flags can be set after the arguments and take no argument. 
 ```
-> amz orange striped socks -s asc 
+>command somearg -flag1 -flag2 -flag3 -flag4
+>gh <flag>
+>gh -h      # help flag, returns a usage message
 ```
-s is the kwarg for sorting the results and takes as an argument asc for ascending. The amz function will intern handle it like this:
-```javascript
-// args = [orange, striped, socks], kwargs = { s: asc } 
-amz: function(args, kwargs) {
-    const searchBaseDE = "https://www.amazon.de/s?k=";
-    let searchterm = encodeUrl(args.join(" "));
+Keyword-arguments are like flags, but are followd by one argument belonging to it. 
+```
+>command somearg -kw arg -kw "long arg with multiple words"
+>amz <searchterm> <kwarg>
+>amz AirPods 2nd Generation -s asc
+```
+Note: Press `TAB` to autocomplete an argument to a keyword and go through the different possibilities.
 
-    const sort = { asc: "&s=price-asc-rank" };
-    if (kwargs.s) searchterm += sort[kwargs.s];
-
-    const searchUrl = searchBaseDE + searchterm;
-    runSearchEvent(searchUrl, "");
-}
-```
 #### Custom command tutorial
-To get a better understanding of how to use what when, we will build a simple js evaluation application called **js**.
-You can write the function somewhere else or directly in the custom command object, like we will do. As explained above, all commands get an args array and a kwargs object containing kwargs and flags. We will print the value to our [helpConsole](widgets.md#helpConsole) for 5 seconds, which are 5000 milliseconds. 
-
+All your code is bundeled in a command class, which will be instantiated when called. The constructor is call with three arguments. 
 ```javascript
-const commandRegistry = {
-    //...
-    js: function(args, kwargs) {
-        const input = args.join(" ");
-        const res = eval(input);
-        return helpConsole.log(res, 5000);
+executingCommand = new cmdClass(args, kwargs, flags);
+```
+**Args is an array** of arguments passed by the user after the command. **Kwargs is an object** with holds the keyword arguments as its properties `{ kw: arg }`. If a keyword is set multiple times in a command expression, only the last argument will get passed, as the others will get overwritten. **Flags is an array** of strings, containing the set flag names (not the dash `-`).
+To get a better understanding of how to use what when, we will build a simple js evaluation application called **js**.
+We will print the value to our [helpConsole](widgets.md#helpConsole) for 5 seconds, which are 5000 milliseconds. 
+First, we will out the basic command template. 
+Note: The command's name is set in the `static name` attribute. The class name **must** start with a capital letter.
+```javascript
+class Js extends Command{
+    static name = "js";
+    static allowedArgs = true;
+    static allowedKwargs = {};
+    static allowedFlags = ["toBePiped"];
+
+    constructor(args, kwargs, flags) {
+        super(args, kwargs, flags);
+    }
+    
+    /*
+    The main application logic sits in the method main. The name is required by the system.
+    */
+    main(args, kwargs, flags) {
+        /*
+        Our command code.
+        */
+        ;
     }
 }
-
 ```
+The system requires `Js` to allways have 5 attributes, four of which must be static. The allowed... properties will be used by the system to autocomplete user input and perform automatic checks, so you don't have to!
+`static name` is a string and the call name of your program.
+`static allowedArgs` can either be an array or boolean `true`. The array length will be used by the default validators to ensure the right argument count is handed over. Else it can build a help message from the elements in the array. If your command accepts a variable length of arguments, please set the field to `true` and do your own validation.
+`static allowedKwargs` is an object and contains all the allowed keywords as properties. If any argument can be passed set the value to true, else provide an array of strings of possible argumentds. This also enables the system to autocomplete the users input.
+`static alledFlags` is an array and contains all the possible flags as strings (**without** dashes). If your command's result can be piped to other commands, you can show that to the system by adding `toBePiped` to the allowed flags. The system will look under the `cmdInstance.result` attribute for the data.
+
+The system will then - after validating the arguments - call the main method. This is the main entrypoint for your programm. I should note that all values are parsed as strings.
+
+Here is a short overview of the provided functions:
+```javascript
+this.hasFlag(flag)  // returns true or false
+this.hasKwarg(kw)   // returns true or false
+this.getKwarg(kw)   // returns a string (or undefined)
+```
+
+So lets now focus on our js command's main function.
+```javascript
+//...
+main(args, kwargs, flags) {
+    const input = args.join(" ");
+    const res = eval(input);
+    if (this.hasFlag("toBePiped")) this.result = res;
+    else return helpConsole.log(res, 5000);
+}
+```
+To let your system know that your command exists we must add the class to the `commandRegistry`.
+In [cli.js](cli.js):
+```javascript
+var commandRegistry = new CommandRegistry(
+    Help,
+    /* ... */
+    Js
+);
+```
+
 We can now use this ~~dangerous~~ *save* code to run JavaScript from our cli, which we could totally not do with the web console... 
 Example:
 ```
 > js alert("Why do Pythons live on land? Because they are above C-level.");
 ```
-I hope that this code hasn't ran in your Browser, your security policy should prohibit programmers running the insecure function _eval_ with user input! Learn more about the dangers [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval).
+I hope that this code hasn't ran in your Browser, your security policy should prohibit programmers running the insecure function _eval_ with user input anyway, but it gave you a good starting point. Learn more about the dangers [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval).
 
 ## Comprehension
-A command is registered in the commandRegistry object. The property name will be the call name. The function will be provided with two arguments, `args` and `kwargs`. 
-`args` is an array of strings containing the arguments to the command. 
-`kwargs` contains all flags and keyword-arguments passed by the user. Flags are properties of `kwargs` with the value `true`. A keyword-argument has the value passed to it as its value instead of `true`. 
-All values are string values and no value is garanteed. It is your job to handle missing values and type casting.
+A command is registered in the commandRegistry object. It is a class that inherits from `Command`. It must have the static attributes `name, allowedArgs, allowedKwargs, allowedFlags` and the entrypoint `main()` function.
+All values are string values and values to attributes which were declared with `true` are not garanteed. It is your job to handle missing values and type casting.
 Mutiple words in quotes are treated as one argument.
-If a command is going to be piped to another command, it will be called with the `toBePiped` flag. It is expected that no user-visible console logging is used and instead the return value contains the data. If data will be piped into a command, the `pipe` keyword-argument will contain the values.
-If the user is missing arguments or parsing wrong keyword-arguments, throw an error. It will be handeled by the API. If the toBePiped flag is set, you must raise the [InternalCommandError](). Here you can see all important errors:
-- [InternalCommandError]()
-- [ArgumentError]()
-- [KeywordArgumentError]()
+If a command is going to be piped to another command, it must except the `toBePiped` flag. It is expected that no user-visible console logging is used and instead the return value is placed under `this.result`.
+If the `toBePiped` flag is set, you must raise the [InternalCommandError](). If any other problem arised, throw an descriptive error. Here you can see all important custom errors. Feel free to create your own:
+- [InternalCommandError](cli.md)
+- [ArgumentError](cli.md)
+- [KeywordArgumentError](cli.md)
+- [FlagError](cli.md)

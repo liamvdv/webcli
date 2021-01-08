@@ -17,9 +17,13 @@ Search [StackOverflow](https://stackoverflow.com/) for a question with **so**:
 ```
 > so check if a str is numeric
 ```
-Search [Amazon](https://amazon.com/) for kitchen magnets with ascending prices with the **amz** command:
+Set environment variables just as in the terminal with **set**:
 ```
-> amz kitchen magnets -s asc
+>set PRESENT "The Ruins of Gorlan"
+``` 
+Search [Amazon](https://amazon.com/) for book with asc prices with the **amz** command:
+```
+> amz $PRESENT -s asc
 ```
 Open your localhost (127.0.0.1) on port 8080 with **l**:
 ```
@@ -50,11 +54,11 @@ Currently supported commands:
 
 
 ### Shortcuts
-Navigate the web without touching your mouse once. [Learn more](docs/shortcuts.md)
+Navigate the web without touching your mouse once. [Learn more](docs/shortcuts.md).
 
 ### Widgets
-Coming soon with full power!
+Widgets allow you to customise the presented graphical interface. The main advantage of a web CLI is the easy access to APIs and a graphical prepresentation of their data if you choose so. [Learn more](docs/widgets.md).  
 
 
 #### Notes
-This project is still a prototype and is missing some core functionality. Shadows only work properly on Firefox. If you have any thoughts please let me know. 
+This Porject is fully build in vanilla JS. I appreciate all feedback and will happily listen to your wishes and needs. 

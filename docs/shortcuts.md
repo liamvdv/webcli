@@ -2,8 +2,11 @@
 Name gives reasoning.
 
 # Most useful
-- ALT + SHIFT (go to next Webtop)
-- ALT + DIGIT (change Webtop to 1 - 3)
+- CTRL + ALT    (peek the help page)
+- ALT + SHIFT   (go to next Webtop)
+- ALT + DIGIT   (change Webtop to 1 - 3)
 
-# Roadmap
-I want to implement a shortcut for getting an overview of the shortcuts while the key is pressed.
+When on the seachbar
+- ArrowUp       (go to prior command in history)
+- ArrorDown     (go to next command in history)
+- Tab           (auto-complete and iterate over keyword-arguments)

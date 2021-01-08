@@ -52,6 +52,7 @@ class InternalCommandError extends Error {
 class Command {
 
     constructor(passedArgs, passedKwargs, passedFlags) {
+        this.constructor.allowedFlags.push("piped");
         this.validateArgs(passedArgs);
         this.validateKwargs(passedKwargs);
         this.validateFlags(passedFlags);
