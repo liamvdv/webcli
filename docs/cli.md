@@ -86,6 +86,27 @@ Usage:
 > amz <searchterm> -s <type>
 > amz blue shirt men -s asc
 ```
+
+## trans
+Translate any sentence with [Linguee](https://www.linguee.com/). By default it will translate from english to german. You can modify both with keyword-arguments: From `-f <language>`; To `-t <language>`.
+Usage:  
+```
+> trans <searchterm> [-f <lang>] [-t <lang>]
+```
+
+Example 1: Translate the english word `enormity` to german:
+```
+> trans enormity
+```
+Example 2: Translate english `sun creme` to italian:
+```
+> trans sun creme -t italian
+```
+Example 3: Translate italian `bella ragazza` to english:
+```
+> trans bella ragazza -f italian -t english
+```
+
 ## feedback
 A quick way to open a new issue on GitHub. Please use it you are
 - experiencing unexpected behaviour

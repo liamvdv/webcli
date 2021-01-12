@@ -243,7 +243,7 @@ class Set extends Command{
     }
 }
 
-class Feedback extends Command {
+class Feedback extends Command{
     static name = "feedback";
     static allowedArgs = [];
     static allowedKwargs = {};
@@ -365,6 +365,83 @@ class Amz extends Command{
     }
 }
 
+class Trans extends Command{
+    static name = "trans";
+    static allowedArgs = true;
+    static allowedKwargs = {
+        f: [
+            "german",
+            "english",
+            "french",
+            "spanish",
+            "portuguese",
+            "italian",
+            "russian",
+            "japanese",
+            "chinese",
+            "polish",
+            "dutch",
+            "swedish",
+            "danish",
+            "finnish",
+            "greek",
+            "czech",
+            "romanian",
+            "hungarian",
+            "slovak",
+            "bulgarian",
+            "slovene",
+            "lithuanian",
+            "estonian",
+            "maltese"
+        ],
+        t: [
+            "german",
+            "english",
+            "french",
+            "spanish",
+            "portuguese",
+            "italian",
+            "russian",
+            "japanese",
+            "chinese",
+            "polish",
+            "dutch",
+            "swedish",
+            "danish",
+            "finnish",
+            "greek",
+            "czech",
+            "romanian",
+            "hungarian",
+            "slovak",
+            "bulgarian",
+            "slovene",
+            "lithuanian",
+            "estonian",
+            "maltese"
+        ]
+    };
+    static allowedFlags = [];
+
+    constructor(args, kwargs, flags) {
+        super(args, kwargs, flags);
+    }
+    
+    main(args, kwargs, flags) {
+        let from = "english";
+        let to = "german";
+        if (this.hasKwarg("f")) from = this.kwargs["f"];
+        if (this.hasKwarg("t")) to = this.kwargs["t"];
+        const searchBase = `https://www.linguee.com/${from}-${to}/search?query=`;
+
+        let searchterm = encodeUrl(args.join(" "));
+
+        const searchUrl = searchBase + searchterm;
+        runSearchEvent(searchUrl, "");
+    }
+}
+
 class Run extends Command {
     static name = "run";
     static allowedArgs = ["srcFile/srcString", "args"]
@@ -456,7 +533,8 @@ var commandRegistry = new CommandRegistry(
     L,
     Gh,
     So,
-    Amz 
+    Amz,
+    Trans
     // Run CORS Problem.
 );
 
