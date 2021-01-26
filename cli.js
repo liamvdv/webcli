@@ -587,6 +587,9 @@ class CLI {
 
     run() {
         if (this.isActive()) this.handle(this.value); // trimed
+        else if (this.value.endsWith(".new") 
+                || this.value.endsWith(".com")
+                || this.value.endsWith(".de")) runSearchEvent(this.value, "https://"); 
         else runSearchEvent(this.value);
     }
 
