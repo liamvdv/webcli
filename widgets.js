@@ -420,5 +420,8 @@ class WidgetManager {
                 else new widget(wgConf);
             }
         });
+
+        // need to reinitialise searchbar after display none aka different wt display
+        cli.el = document.querySelector(".searchbar");
     }
 }
