@@ -442,6 +442,56 @@ class Trans extends Command{
     }
 }
 
+class Go extends Command {
+    static name = "go";
+    static allowedArgs = true
+    static allowedKwargs = {
+        f: true,
+        t: true
+    }
+    static allowedFlags = ["h", "var", "const"]
+
+    constructor(args, kwargs, flags) {
+        super(args, kwargs, flags);
+    }
+
+    main(args, kwargs, flags) {
+        const godocBase = "https://golang.org/pkg/"
+
+        const usage = function() {
+            helpConsole.log("Usage: go <pkg>");
+        }
+
+        // allow this no matter what.
+        if (this.hasFlag("h")) return usage();
+
+        if (args.length != 1) return usage();
+
+        let searchUrl = godocBase + args[0]
+
+        if (Object.keys(kwargs).length + flags.length > 1) {
+            return helpConsole.log("go does only expect one kwarg or flag.")
+        }
+
+        switch (true) {
+        case this.hasKwarg("f"):
+            searchUrl += `/#${this.getKwarg("f")}`
+            break
+        case this.hasKwarg("t"):
+            searchUrl += `/#${this.getKwarg("t")}`
+            break
+        case this.hasFlag("const"):
+            searchUrl += "/#pkg-constants"
+            break
+        case this.hasFlag("var"):
+            searchUrl += "/#pkg-variables"
+            break
+        }
+
+        runSearchEvent(searchUrl, "")
+    }
+}
+
 class Run extends Command {
     static name = "run";
     static allowedArgs = ["srcFile/srcString", "args"]
@@ -534,7 +584,8 @@ var commandRegistry = new CommandRegistry(
     Gh,
     So,
     Amz,
-    Trans
+    Trans,
+    Go
     // Run CORS Problem.
 );
 

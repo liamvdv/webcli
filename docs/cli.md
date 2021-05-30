@@ -107,12 +107,38 @@ Example 3: Translate italian `bella ragazza` to english:
 > trans bella ragazza -f italian -t english
 ```
 
+## go
+Quickly lookup the Golang [standard library](https://golang.org/pkg).
+Usage:
+```
+> go <pkg import path> [-var] [-const] [-f <func name>] [-t <type name>]
+```
+The _go_ command allows you to quickly get exactly where you want to be, to help with that, you can choose exactly one of the available flags and keyword arguments.  
+If you want to go to the page of the `io/fs` package, type:
+```
+> go io/fs
+```
+If you want to check the errors functions in `io/fs` return, but you forget the name, just list the variables with the `-var` flag.
+```
+> go io/fs -var
+```
+Same applies to `-const` flag. This may be helpful if you forgot which options you can pass to `os.OpenFile()`, because these enums are typically implemented as constants. So, to make sure that it was `os.O_TRUNC` and not `os.O_TRUN`, go to the docs with:
+```
+> go os -const
+```
+You can also look up a certain type or function directly by providing its identifier with the `-f` (think function) and `-t` (think type) keyword arguments.
+For example, lets look up the `io.RuneScanner` interface, which we want our type to implement:
+```
+> go io -t RuneScanner
+```
+
 ## feedback
 A quick way to open a new issue on GitHub. Please use it you are
 - experiencing unexpected behaviour
 - asked to report an uncaught error by the software
 - a genius and have a great idea or need for a feature
 A minute of your time helps this project progress by hours. Thank you.
+
 
 ## Custom commands
 You've read corrently! You can make your own commands and host them on your own GitHub pages or make a pull request.
@@ -138,7 +164,7 @@ Keyword-arguments are like flags, but are followd by one argument belonging to i
 Note: Press `TAB` to autocomplete an argument to a keyword and go through the different possibilities.
 
 #### Custom command tutorial
-All your code is bundeled in a command class, which will be instantiated when called. The constructor is call with three arguments. 
+All your code is bundeled in a command class, which will be instantiated when called. The constructor is called with three arguments. 
 ```javascript
 executingCommand = new cmdClass(args, kwargs, flags);
 ```

@@ -50,6 +50,7 @@ Currently supported commands:
 - [gh](docs/cli.md#gh)
 - [so](docs/cli.md#so)
 - [amz](docs/cli.md#amz)
+- [go](docs/cli.md#go)
 - [feedback](docs/cli.md#feedback)
 
 
