@@ -133,7 +133,7 @@ class CommandRegistry {
     get(cmdStr) {
         const c = this.cmds[cmdStr];
         if (c) return c;
-        else throw new CommandNotFoundError(`${cmdStr} unkown. Type >help or hold CTRL + ALT for help.`);
+        else throw new CommandNotFoundError(`${cmdStr} unkown. Type :help or hold CTRL + ALT for help.`);
     }
 }
 
@@ -178,7 +178,7 @@ class Help extends Command{
         let goTo = "#quick-start"
         if (args.length > 0) {
             if (args.length == 1) goTo = "/blob/master/docs/cli.md#" + args[0];
-            else return helpConsole.log("Usage: >help [<command>]"); // automate with function 
+            else return helpConsole.log("Usage: :help [<command>]"); // automate with function 
         }
         const searchUrl = helpPage + goTo;  
         runSearchEvent(searchUrl, "");
@@ -205,7 +205,7 @@ class Get extends Command{
             if (this.hasFlag("toBePiped")) {
                 throw new InternalCommandError(`Key ${key} is undefined.`);
             } else {
-                helpConsole.log(`${key} is undefined. Use >set <KEY> <VALUE> to set a new variable.`);
+                helpConsole.log(`${key} is undefined. Use :set <KEY> <VALUE> to set a new variable.`);
             }
         } else {
             if (this.hasFlag("toBePiped")) this.result = store[key];
@@ -225,7 +225,7 @@ class Set extends Command{
     }
     
     main(args, kwargs, flags) {
-        // if (args.length < 2) throw new ArgumentError("Expects at least two arguments. Usage: >set <KEY> <VALUE>"); automate that!! (help msg from static attributes)
+        // if (args.length < 2) throw new ArgumentError("Expects at least two arguments. Usage: :set <KEY> <VALUE>"); automate that!! (help msg from static attributes)
         const STORAGE_KEY = g.config["cliEnvVarKey"];
 
         const key = args[0];
@@ -261,7 +261,7 @@ class Feedback extends Command{
 
 class L extends Command{
     static name = "l";
-    static allowedArgs = ["port<int>"];
+    static allowedArgs = ["port<int:"];
     static allowedKwargs = {};
     static allowedFlags = ["h"];
 
@@ -270,7 +270,7 @@ class L extends Command{
     }
     
     main(args, kwargs, flags) {
-        if (this.hasFlag("h")) return helpConsole.log("Usage: >l port"); // automate 
+        if (this.hasFlag("h")) return helpConsole.log("Usage: :l port"); // automate 
         const url = "http://127.0.0.1:" + args[0];
         runSearchEvent(url, "");
     }
@@ -287,8 +287,8 @@ class Gh extends Command{
     }
     
     main(args, kwargs, flags) {
-        // Usage: >gh (got to github)
-        // Usage: >gh <searchterm>
+        // Usage: :gh (got to github)
+        // Usage: :gh <searchterm>
         let searchBase = "https://www.github.com/"
         let searchterm = "";
         
@@ -632,7 +632,7 @@ class CLI {
         return this.isActive() ? v.slice(1).trim() : v;
     }
     set value(v) {
-        return this.el.value = `>${v}`;
+        return this.el.value = `:${v}`;
     }
 
 
@@ -679,7 +679,7 @@ class CLI {
                            err instanceof SameCommandNameError) {
                     helpConsole.log(`An internal error inside the command occured: ${err.msg}`);
                 } else {
-                    helpConsole.log("An unexpected Error occured. Type >feedback to report this issue, thank you.")
+                    helpConsole.log("An unexpected Error occured. Type :feedback to report this issue, thank you.")
                     throw err;
                 }
             } finally {
@@ -722,12 +722,12 @@ class CLI {
     }
 
     clear() {
-        this.el.value = ">";
+        this.el.value = ":";
         this.temp = {};
     }
 
     isActive() {
-        return this.el.value.startsWith(">");
+        return this.el.value.startsWith(":");
     }
 
     isFocused() {

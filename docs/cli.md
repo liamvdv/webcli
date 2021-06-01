@@ -7,11 +7,11 @@ Search the web as you normally do. Choose your favorite search engine from
 The default search engine is Google.
 
 # ... on steriods
-This searchbar turns into everything you want as soon as you type > (greater than sign).
+This searchbar turns into everything you want as soon as you type : (colon).
 Below you will see some preimplemented commands. If you are missing one, go [here](#Custom-Commands) to learn how to implement your own!
 Usage: 
 ```
-> <command> <args> [<flags>] [<kw> <kwArg>]
+: <command> <args> [<flags>] [<kw> <kwArg>]
 ```
 You can even go through your last command history with ArrowUp and ArrowDown, just like in the real commandline. The last 10 commands are stored.  
 Arguments to a command must be provided. Flags and keyword-arguments can modify the commands behaviour. A keyword only takes one argument.
@@ -21,8 +21,8 @@ Arguments are always space separated. If a command or keyword expects multiple w
 You may access custom environment variables by prefixing them with the dollar sign `$<name>`.
 Example:
 ```
->set WISHLIST "Brooks Ghost 13 running shoes men"
->amz $WISHLIST -s asc
+:set WISHLIST "Brooks Ghost 13 running shoes men"
+:amz $WISHLIST -s asc
 ```
 Where we set the key `WISHLIST` equal to `"Brooks Ghost 13 running shoes men"` with [set](#set).
 Then we run the [amz](#amz) command to search Amazon for the shoes and filter by ascending prices. 
@@ -31,13 +31,13 @@ Then we run the [amz](#amz) command to search Amazon for the shoes and filter by
 Get to the documentation page of a command.
 Usage: 
 ```
->help <command>
+:help <command>
 ```
 ## set
 Set environment variables just like in the real terminal.
 Usage:
 ```
->set <KEY> <VALUE>
+:set <KEY> <VALUE>
 ```
 Note: Keys must not include spaces. If the value is one word no quotes are required, else you must provide quotes.
 
@@ -45,8 +45,8 @@ Note: Keys must not include spaces. If the value is one word no quotes are requi
 Get your custom set environment variables.
 Usage:
 ```
->get <KEY>
->$<KEY>     # pass value as argument to another function.
+:get <KEY>
+:$<KEY>     # pass value as argument to another function.
 ```
 The dollar sign syntax is very handy for long repeating (keyword-) arguments to other commands.
 
@@ -54,27 +54,27 @@ The dollar sign syntax is very handy for long repeating (keyword-) arguments to 
 Quickly get to your test server running on localhost (127.0.0.1).
 Usage:
 ```
->l <port>
+:l <port>
 ```  
 
 ## gh
 Open and search GitHub directly from your CLI.
 ```
->gh [<searchterm>]
+:gh [<searchterm>]
 ```
 The __gh__ command supports the _h_ flag to get some knowledge on how to use it from the [helpConsole](widgets.md#helpConsole). 
 
 ## so
 Search StackOverflow directly from your Webtop.
 ```
->so <question>
+:so <question>
 ```
 Does not currently support any other flags or kwargs. 
 
 ## amz
 Search Amazon directly from your Webtop.
 ```
->amz <searchterm> [options]
+:amz <searchterm> [options]
 ```
 The _amz_ command supports the sorted by kwarg. Four types are supported:
 - asc (ascending price)
@@ -83,53 +83,53 @@ The _amz_ command supports the sorted by kwarg. Four types are supported:
 - new (by newest)
 Usage:
 ```
-> amz <searchterm> -s <type>
-> amz blue shirt men -s asc
+: amz <searchterm> -s <type>
+: amz blue shirt men -s asc
 ```
 
 ## trans
 Translate any sentence with [Linguee](https://www.linguee.com/). By default it will translate from english to german. You can modify both with keyword-arguments: From `-f <language>`; To `-t <language>`.
 Usage:  
 ```
-> trans <searchterm> [-f <lang>] [-t <lang>]
+: trans <searchterm> [-f <lang>] [-t <lang>]
 ```
 
 Example 1: Translate the english word `enormity` to german:
 ```
-> trans enormity
+: trans enormity
 ```
 Example 2: Translate english `sun creme` to italian:
 ```
-> trans sun creme -t italian
+: trans sun creme -t italian
 ```
 Example 3: Translate italian `bella ragazza` to english:
 ```
-> trans bella ragazza -f italian -t english
+: trans bella ragazza -f italian -t english
 ```
 
 ## go
 Quickly lookup the Golang [standard library](https://golang.org/pkg).
 Usage:
 ```
-> go <pkg import path> [-var] [-const] [-f <func name>] [-t <type name>]
+: go <pkg import path> [-var] [-const] [-f <func name>] [-t <type name>]
 ```
 The _go_ command allows you to quickly get exactly where you want to be, to help with that, you can choose exactly one of the available flags and keyword arguments.  
 If you want to go to the page of the `io/fs` package, type:
 ```
-> go io/fs
+: go io/fs
 ```
 If you want to check the errors functions in `io/fs` return, but you forget the name, just list the variables with the `-var` flag.
 ```
-> go io/fs -var
+: go io/fs -var
 ```
 Same applies to `-const` flag. This may be helpful if you forgot which options you can pass to `os.OpenFile()`, because these enums are typically implemented as constants. So, to make sure that it was `os.O_TRUNC` and not `os.O_TRUN`, go to the docs with:
 ```
-> go os -const
+: go os -const
 ```
 You can also look up a certain type or function directly by providing its identifier with the `-f` (think function) and `-t` (think type) keyword arguments.
 For example, lets look up the `io.RuneScanner` interface, which we want our type to implement:
 ```
-> go io -t RuneScanner
+: go io -t RuneScanner
 ```
 
 ## feedback
@@ -145,21 +145,21 @@ You've read corrently! You can make your own commands and host them on your own 
 Commands are basically Classes that have a name, take in an array of arguments, an array of flags and an object called kwargs, short for keyword-arguments. They are all registered in the [commandRegistry object](cli.js).
 Arguments following a command will be split on space and added to the args array. They must be provided.
 ```
->commmand arg1 arg2 arg3 ...
->help <command>
->help amz   # go the the amz documentation
+:commmand arg1 arg2 arg3 ...
+:help <command>
+:help amz   # go the the amz documentation
 ```
 Flags can be set after the arguments and take no argument. 
 ```
->command somearg -flag1 -flag2 -flag3 -flag4
->gh <flag>
->gh -h      # help flag, returns a usage message
+:command somearg -flag1 -flag2 -flag3 -flag4
+:gh <flag>
+:gh -h      # help flag, returns a usage message
 ```
 Keyword-arguments are like flags, but are followd by one argument belonging to it. 
 ```
->command somearg -kw arg -kw "long arg with multiple words"
->amz <searchterm> <kwarg>
->amz AirPods 2nd Generation -s asc
+:command somearg -kw arg -kw "long arg with multiple words"
+:amz <searchterm> <kwarg>
+:amz AirPods 2nd Generation -s asc
 ```
 Note: Press `TAB` to autocomplete an argument to a keyword and go through the different possibilities.
 
@@ -233,7 +233,7 @@ var commandRegistry = new CommandRegistry(
 We can now use this ~~dangerous~~ *save* code to run JavaScript from our cli, which we could totally not do with the web console... 
 Example:
 ```
-> js alert("Why do Pythons live on land? Because they are above C-level.");
+: js alert("Why do Pythons live on land? Because they are above C-level.");
 ```
 I hope that this code hasn't ran in your Browser, your security policy should prohibit programmers running the insecure function _eval_ with user input anyway, but it gave you a good starting point. Learn more about the dangers [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval).
 
