@@ -11,27 +11,27 @@ The following gives you a quick overview of how to get started with your own Web
 Hold `CTRL + ALT` to access the help page.
 Rotate to the next Webtop with `ALT + SHIFT` or jump directly to one by pressing `ALT + DIGIT`.
 
-The CLI gets activated by typing ">" into the searchbar.
+The CLI gets activated by typing ":" into the searchbar.
 From there on you have access to a range of commands. Here are some examples:
 Search [StackOverflow](https://stackoverflow.com/) for a question with **so**:
 ```
-> so check if a str is numeric
+: so check if a str is numeric
 ```
 Set environment variables just as in the terminal with **set**:
 ```
->set PRESENT "The Ruins of Gorlan"
+: set PRESENT "The Ruins of Gorlan"
 ``` 
 Search [Amazon](https://amazon.com/) for book with asc prices with the **amz** command:
 ```
-> amz $PRESENT -s asc
+: amz $PRESENT -s asc
 ```
 Open your localhost (127.0.0.1) on port 8080 with **l**:
 ```
-> l 8080
+: l 8080
 ```
 To see all commands go [here](docs/cli.md) or type into your Webtop CLI:
 ```
-> help <command>
+: help <command>
 ```
 [Try it out!](https://liamvdv.github.io)
 
