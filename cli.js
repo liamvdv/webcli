@@ -444,7 +444,7 @@ class Trans extends Command{
 
 class Go extends Command {
     static name = "go";
-    static allowedArgs = true
+    static allowedArgs = true;
     static allowedKwargs = {
         f: true,
         t: true
@@ -489,6 +489,38 @@ class Go extends Command {
         }
 
         runSearchEvent(searchUrl, "")
+    }
+}
+
+class GermanLaw extends Command{
+    static name = "§";
+    static allowedArgs = true;
+    static allowedKwargs = {};
+    static allowedFlags = [];
+
+    constructor(args, kwargs, flags) {
+        super(args, kwargs, flags);
+    }
+    
+    main(args, kwargs, flags) {
+        const searchBase = "https://www.gesetze-im-internet.de/";
+
+        const basicLeaf = (art) => `__${art}.html`;
+        const validBooks = {
+            "gg": (art) => `art_${art}.html`,
+        };
+
+        if (args.length < 2) return helpConsole.log("Usage: § <article> <abbr. lawbook>");
+
+        const art = args[0];
+        let book = args[1].toLowerCase();
+        let template = validBooks[book];
+        if (template === undefined)
+            template = basicLeaf
+
+        const searchUrl = `${searchBase}${book}/${template(art)}`;
+        runSearchEvent(searchUrl, "");
+        this.result = undefined;
     }
 }
 
@@ -585,7 +617,8 @@ var commandRegistry = new CommandRegistry(
     So,
     Amz,
     Trans,
-    Go
+    Go,
+    GermanLaw
     // Run CORS Problem.
 );
 
