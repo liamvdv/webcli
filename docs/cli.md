@@ -6,7 +6,7 @@ Search the web as you normally do. Choose your favorite search engine from
 - [Bing](https://www.bing.com/search)
 The default search engine is Google.
 
-# ... on steriods
+# ... on steroids
 This searchbar turns into everything you want as soon as you type : (colon).
 Below you will see some preimplemented commands. If you are missing one, go [here](#Custom-Commands) to learn how to implement your own!
 Usage: 
@@ -91,45 +91,60 @@ Usage:
 Translate any sentence with [Linguee](https://www.linguee.com/). By default it will translate from english to german. You can modify both with keyword-arguments: From `-f <language>`; To `-t <language>`.
 Usage:  
 ```
-: trans <searchterm> [-f <lang>] [-t <lang>]
+:trans <searchterm> [-f <lang>] [-t <lang>]
 ```
 
 Example 1: Translate the english word `enormity` to german:
 ```
-: trans enormity
+:trans enormity
 ```
 Example 2: Translate english `sun creme` to italian:
 ```
-: trans sun creme -t italian
+:trans sun creme -t italian
 ```
 Example 3: Translate italian `bella ragazza` to english:
 ```
-: trans bella ragazza -f italian -t english
+:trans bella ragazza -f italian -t english
 ```
 
 ## go
 Quickly lookup the Golang [standard library](https://golang.org/pkg).
 Usage:
 ```
-: go <pkg import path> [-var] [-const] [-f <func name>] [-t <type name>]
+:go <pkg import path> [-var] [-const] [-f <func name>] [-t <type name>]
 ```
 The _go_ command allows you to quickly get exactly where you want to be, to help with that, you can choose exactly one of the available flags and keyword arguments.  
 If you want to go to the page of the `io/fs` package, type:
 ```
-: go io/fs
+:go io/fs
 ```
 If you want to check the errors functions in `io/fs` return, but you forget the name, just list the variables with the `-var` flag.
 ```
-: go io/fs -var
+:go io/fs -var
 ```
 Same applies to `-const` flag. This may be helpful if you forgot which options you can pass to `os.OpenFile()`, because these enums are typically implemented as constants. So, to make sure that it was `os.O_TRUNC` and not `os.O_TRUN`, go to the docs with:
 ```
-: go os -const
+:go os -const
 ```
 You can also look up a certain type or function directly by providing its identifier with the `-f` (think function) and `-t` (think type) keyword arguments.
 For example, lets look up the `io.RuneScanner` interface, which we want our type to implement:
 ```
-: go io -t RuneScanner
+:go io -t RuneScanner
+```
+
+## §
+Look up German laws directly from your Webtop with the help of [gesetze-im-internet.de](https://www.gesetze-im-internet.de/). 
+```
+:§ <article> <abbreviated lawbook>
+```
+
+Statements classified as hate speech are not protected by freedom of speech. To see why, let's take a look at Article 5 in Germany's basic law call *Grundgesetz*. 
+```
+:§ 5 GG
+```
+The implications of (2) are further quantified in other parts of German law. For example, publicly sharing symbols of unconstitutional organisations is considered an offense § 86a StGB.
+```
+:§ 86a StGB
 ```
 
 ## feedback

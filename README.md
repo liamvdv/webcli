@@ -29,6 +29,10 @@ Open your localhost (127.0.0.1) on port 8080 with **l**:
 ```
 : l 8080
 ```
+Look up German laws with the **§** command:
+```
+: § 20 GG
+```
 To see all commands go [here](docs/cli.md) or type into your Webtop CLI:
 ```
 : help <command>

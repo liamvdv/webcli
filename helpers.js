@@ -179,6 +179,9 @@ const HELPPAGEHTML = {
             <span class="option-color">desc</span> : price descending<br>
             <span class="option-color">new</span> : new in stock
         </p>
+
+        <p class="cmd"> § &lt;article&gt; &lt;lawbook&gt;</p>
+        <p class="tab">lookup german laws</p>
     ` // better do the options in a table?
 }
 
