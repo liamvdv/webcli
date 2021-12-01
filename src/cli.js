@@ -173,7 +173,7 @@ class Help extends Command{
     }
     
     main(args, kwargs, flags) {
-        const helpPage = "https://www.github.com/Liamvdv/liamvdv.github.io";
+        const helpPage = "https://www.github.com/webcli-dev/webcli";
 
         let goTo = "#quick-start"
         if (args.length > 0) {
@@ -254,7 +254,7 @@ class Feedback extends Command{
     }
     
     main(args, kwargs, flags) {
-        const searchUrl = "https://github.com/Liamvdv/liamvdv.github.io/issues/new";
+        const searchUrl = "https://github.com/webcli-dev/webcli/issues/new";
         runSearchEvent(searchUrl, "");
     }
 }

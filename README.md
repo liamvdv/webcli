@@ -2,7 +2,7 @@
 Webtop are desktops in your browser, that help you navigate the web.
 Custom [Widgets](#Widgets) allow you to gather all the information you want in one place and
 quickly navigate them with [Shortcuts](#Shortcuts) and it's custom [CLI](#CLI).
-[Check it out](https://liamvdv.github.io)!
+[Check it out](https://webcli.dev)!
 
 ## Quick-Start🚀
 Your Webtops have three unique features: [Shortcuts](docs/shortcuts.md), the [CLI](docs/cli.md) and [Widgets](docs/widgets.md). The special part: The ready-made ones are fully customisable and you can add your own widgets and commands.
@@ -37,11 +37,11 @@ To see all commands go [here](docs/cli.md) or type into your Webtop CLI:
 ```
 : help <command>
 ```
-[Try it out!](https://liamvdv.github.io)
+[Try it out!](https://webcli.dev)
 
 ## Installation
 If your are like me and open your browser frequently, you really come to appreciate a webtop. They are ment to open everytime you open your browser and will configure themselves from [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-In Firefox: type __about:preferences#home__ > Page > dropdown select user-defined address > type https://liamvdv.github.io > close Firefox > reopen and enjoy!
+In Firefox: type __about:preferences#home__ > Page > dropdown select user-defined address > type https://webcli.dev > close Firefox > reopen and enjoy!
 
 ### CLI
 Add your custom commands by cloning this project and just adding a function.
